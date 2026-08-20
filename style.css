@@ -177,15 +177,65 @@ main{
   box-shadow:0 20px 55px rgba(100,60,180,.25);
 }
 
+/* Premium Movie Poster */
+.thumb-wrap{
+  position:relative;
+  height:310px;
+  overflow:hidden;
+  background:#08080d;
+  cursor:pointer;
+}
+
+.poster{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+  transition:transform .4s ease, filter .4s ease;
+}
+
+.thumb-wrap:hover .poster{
+  transform:scale(1.06);
+  filter:brightness(.65);
+}
+
+/* Fallback when no poster */
 .movie .thumb{
-  height:150px;
+  width:100%;
+  height:100%;
+  min-height:310px;
   display:flex;
   align-items:center;
   justify-content:center;
   background:
     radial-gradient(circle,#7c3aed55,transparent 55%),
     linear-gradient(135deg,#15121f,#08080d);
-  font-size:50px;
+  font-size:0;
+}
+
+/* Play button */
+.play-overlay{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:64px;
+  height:64px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  color:white;
+  font-size:25px;
+  background:linear-gradient(135deg,#8b5cf6,#ec4899);
+  box-shadow:0 8px 35px rgba(139,92,246,.55);
+  opacity:0;
+  transition:.3s ease;
+}
+
+.thumb-wrap:hover .play-overlay{
+  opacity:1;
+  transform:translate(-50%,-50%) scale(1.08);
 }
 
 .movie .thumb::after{
