@@ -7,18 +7,54 @@ function showApp(){login.classList.add("hidden");app.classList.remove("hidden");
 function showLogin(){app.classList.add("hidden");login.classList.remove("hidden");$("#logout").classList.add("hidden");}
 
 async function load(){
- const r=await fetch("/api/videos",{headers:headers()});
- if(r.status===401)return logout();
- const videos=await r.json();
- grid.innerHTML=videos.length?"":"<div class='card'>No videos yet. Upload your first video.</div>";
- videos.forEach(v=>{
-   const el=document.createElement("article"); el.className="movie";
-   el.innerHTML=`<div class="thumb">▶️</div><h3></h3><small>${(v.size/1024/1024).toFixed(1)} MB</small><div class="actions"><button class="watch">Watch</button><button class="danger del">Delete</button></div>`;
-   el.querySelector("h3").textContent=v.title;
-   el.querySelector(".watch").onclick=()=>watch(v);
-   el.querySelector(".del").onclick=()=>remove(v.id);
-   grid.appendChild(el);
- });
+  const r = await fetch("/api/videos", {
+    headers: headers()
+  });
+
+  if (r.status === 401) return logout();
+
+  const videos = await r.json();
+
+  grid.innerHTML = videos.length
+    ? ""
+    : "<div class='card'>No videos yet. Upload your first video.</div>";
+
+  videos.forEach(v => {
+    const el = document.createElement("article");
+    el.className = "movie";
+
+    const posterHTML = v.poster
+      ? <img src="${v.poster}" class="poster" alt="${v.title}">
+      : <div class="thumb">▶️</div>;
+
+    el.innerHTML = `
+      <div class="thumb-wrap">
+        ${posterHTML}
+        <div class="play-overlay">▶️</div>
+      </div>
+
+      <h3></h3>
+
+      <small>
+        ${(v.size / 1024 / 1024).toFixed(1)} MB
+      </small>
+
+      <div class="actions">
+        <button class="watch">Watch</button>
+        <button class="danger del">Delete</button>
+      </div>
+    `;
+
+    el.querySelector("h3").textContent = v.title;
+
+    el.querySelector(".watch").onclick = () => watch(v);
+
+    el.querySelector(".del").onclick = () => remove(v.id);
+
+    el.querySelector(".thumb-wrap").onclick = () => watch(v);
+
+    grid.appendChild(el);
+  });
 }
 function watch(v){
  $("#playerTitle").textContent=v.title;
