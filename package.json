@@ -1,5 +1,5 @@
 {
-  "name": "rtx-movie-watch",
+  "name": "my-movie-watch",
   "version": "1.0.0",
   "description": "Private movie collection website",
   "main": "server.js",
