@@ -49,3 +49,15 @@ $("#uploadForm").onsubmit=async e=>{
  if(r.ok){e.target.reset();load();}
 };
 if(password) showApp(); else showLogin();
+const searchInput = document.getElementById("searchInput");
+
+if (searchInput) {
+  searchInput.addEventListener("input", () => {
+    const query = searchInput.value.toLowerCase().trim();
+
+    document.querySelectorAll("#grid > *").forEach(card => {
+      card.style.display =
+        card.innerText.toLowerCase().includes(query) ? "" : "none";
+    });
+  });
+}
