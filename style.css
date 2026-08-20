@@ -1,1 +1,264 @@
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,Arial;background:#0b0d12;color:#fff}header{height:64px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #222}.brand{font-weight:800;font-size:20px}main{max-width:1100px;margin:auto;padding:28px 18px}.card{background:#151923;border:1px solid #282d3a;border-radius:18px;padding:24px}.hidden{display:none!important}.login{}#login{max-width:440px;margin:90px auto;text-align:center}input{width:100%;padding:13px;margin:8px 0;border-radius:10px;border:1px solid #343a48;background:#0e1118;color:#fff}button{border:0;border-radius:10px;padding:12px 18px;background:#fff;color:#111;font-weight:700;cursor:pointer}button:hover{opacity:.9}.ghost{background:transparent;color:#fff;border:1px solid #444}.hero{padding:10px 0 20px}.upload{margin-bottom:24px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}.movie{background:#151923;border:1px solid #282d3a;border-radius:16px;padding:15px}.thumb{height:145px;border-radius:12px;background:linear-gradient(135deg,#202633,#0e1118);display:flex;align-items:center;justify-content:center;font-size:48px;margin-bottom:12px}.movie h3{margin:5px 0 12px}.actions{display:flex;gap:8px}.actions button{flex:1}.danger{background:#5b1d26;color:#fff}.modal{position:fixed;inset:0;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;padding:20px}.playerBox{width:min(1000px,100%);position:relative}.playerBox video{width:100%;max-height:75vh;background:#000;border-radius:12px}.close{position:absolute;right:0;top:-45px;background:#fff}.msg{min-height:20px;color:#ffb4b4}.upload form{display:grid;grid-template-columns:1fr 1fr auto;gap:10px}@media(max-width:700px){.upload form{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Inter, Arial, sans-serif;
+  background:
+    radial-gradient(circle at top left, #242b55 0%, transparent 35%),
+    radial-gradient(circle at top right, #3b164f 0%, transparent 30%),
+    #070912;
+  color: #fff;
+  min-height: 100vh;
+}
+
+header {
+  height: 72px;
+  padding: 0 6%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  background: rgba(7,9,18,.75);
+  backdrop-filter: blur(18px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.brand {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: .5px;
+}
+
+.brand::before {
+  content: "🎬 ";
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+  font-weight: 700;
+  transition: .25s;
+}
+
+#logout {
+  background: rgba(255,255,255,.08);
+  color: white;
+  padding: 10px 18px;
+  border-radius: 12px;
+}
+
+#logout:hover {
+  background: rgba(255,255,255,.16);
+}
+
+main {
+  width: min(1200px, 92%);
+  margin: auto;
+  padding: 55px 0;
+}
+
+.hero {
+  margin-bottom: 35px;
+}
+
+.hero h1 {
+  font-size: clamp(34px, 6vw, 58px);
+  line-height: 1.05;
+  margin-bottom: 12px;
+  background: linear-gradient(90deg, #fff, #b9c5ff);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.hero p {
+  color: #aab1c7;
+  font-size: 16px;
+}
+
+.card {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 22px;
+  padding: 28px;
+  box-shadow: 0 25px 70px rgba(0,0,0,.25);
+  backdrop-filter: blur(20px);
+}
+
+.upload-card {
+  margin-bottom: 38px;
+}
+
+.upload-card h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+#uploadForm {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr auto;
+  gap: 12px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="file"] {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 13px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.25);
+  color: white;
+  outline: none;
+}
+
+input:focus {
+  border-color: #7c8cff;
+  box-shadow: 0 0 0 3px rgba(124,140,255,.15);
+}
+
+#uploadForm button {
+  padding: 14px 24px;
+  border-radius: 13px;
+  color: white;
+  background: linear-gradient(135deg, #6d5dfc, #9b4dff);
+  box-shadow: 0 10px 25px rgba(120,80,255,.3);
+}
+
+#uploadForm button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(120,80,255,.45);
+}
+
+#grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 24px;
+}
+
+#grid > * {
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+  transition: .3s;
+}
+
+#grid > *:hover {
+  transform: translateY(-7px);
+  border-color: rgba(140,150,255,.45);
+  box-shadow: 0 20px 45px rgba(0,0,0,.35);
+}
+
+#grid video,
+#grid img {
+  width: 100%;
+  display: block;
+}
+
+#grid button {
+  margin: 12px;
+  padding: 10px 15px;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #111;
+}
+
+#grid button:hover {
+  transform: scale(1.04);
+}
+
+#grid button.delete,
+#grid button[style*="red"] {
+  background: #ef4444;
+  color: white;
+}
+
+#playerModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.88);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+  padding: 5vh 5%;
+}
+
+.playerBox {
+  width: min(1000px, 100%);
+  margin: auto;
+  background: #0d1020;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 22px;
+  padding: 20px;
+  box-shadow: 0 30px 100px rgba(0,0,0,.7);
+}
+
+#player {
+  width: 100%;
+  max-height: 75vh;
+  border-radius: 15px;
+  background: #000;
+}
+
+#playerTitle {
+  padding: 12px 0;
+  font-size: 20px;
+}
+
+.close {
+  background: rgba(255,255,255,.1);
+  color: white;
+  padding: 8px 14px;
+  border-radius: 10px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media (max-width: 700px) {
+  header {
+    height: 62px;
+    padding: 0 5%;
+  }
+
+  .brand {
+    font-size: 19px;
+  }
+
+  main {
+    padding: 35px 0;
+  }
+
+  .card {
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  #uploadForm {
+    grid-template-columns: 1fr;
+  }
+
+  #grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .hero h1 {
+    font-size: 36px;
+  }
+
+  #playerModal {
+    padding: 20px 10px;
+  }
+}
+
+@media (max-width: 420px) {
+  #grid {
+    grid-template-columns: 1fr;
+  }
+}
