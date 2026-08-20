@@ -29,29 +29,32 @@ body {
     Helvetica,
     sans-serif;
 
+  color: white;
+
   background:
     radial-gradient(
       circle at top,
-      #4b1f75 0%,
-      #171226 40%,
-      #080711 100%
+      #54237d 0%,
+      #1b1430 38%,
+      #08070d 100%
     );
-
-  color: white;
 
 }
 
 .container {
 
-  width: min(1100px, 94%);
+  width:
+    min(1150px, 94%);
 
-  margin: auto;
+  margin:
+    auto;
 
 }
 
 header {
 
-  padding: 55px 0 35px;
+  padding:
+    55px 0 35px;
 
 }
 
@@ -59,294 +62,635 @@ header h1 {
 
   margin: 0;
 
-  font-size: clamp(38px, 7vw, 70px);
+  font-size:
+    clamp(
+      42px,
+      7vw,
+      72px
+    );
 
 }
 
 header p {
 
-  color: #cfc9df;
+  color:
+    #cfc9dd;
 
-  font-size: 17px;
+  line-height:
+    1.6;
 
-  max-width: 650px;
-
-  line-height: 1.6;
+  max-width:
+    650px;
 
 }
 
 .card {
 
-  background:
-    rgba(255,255,255,0.08);
+  margin-bottom:
+    25px;
+
+  padding:
+    25px;
+
+  border-radius:
+    22px;
 
   border:
-    1px solid rgba(255,255,255,0.12);
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.12
+    );
 
-  border-radius: 22px;
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.07
+    );
 
-  padding: 24px;
-
-  margin-bottom: 25px;
-
-  backdrop-filter: blur(15px);
+  backdrop-filter:
+    blur(15px);
 
 }
 
 .card h2 {
 
-  margin-top: 0;
+  margin-top:
+    0;
 
 }
 
-.upload-row {
+.form-grid {
 
-  display: flex;
+  display:
+    grid;
 
-  gap: 12px;
+  grid-template-columns:
+    1fr 1fr;
 
-  flex-wrap: wrap;
-
-}
-
-input[type="text"] {
-
-  flex: 1;
-
-  min-width: 220px;
-
-  padding: 15px;
-
-  border: none;
-
-  border-radius: 12px;
-
-  background: rgba(0,0,0,0.35);
-
-  color: white;
-
-  outline: none;
+  gap:
+    14px;
 
 }
 
+.field {
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    8px;
+
+}
+
+.field label {
+
+  color:
+    #cfc9dd;
+
+  font-size:
+    14px;
+
+}
+
+input[type="text"],
 input[type="file"] {
 
-  flex: 1;
+  width:
+    100%;
 
-  min-width: 220px;
+  padding:
+    15px;
 
-  padding: 12px;
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.1
+    );
 
-  border-radius: 12px;
+  border-radius:
+    12px;
 
-  background: rgba(0,0,0,0.35);
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.3
+    );
 
-  color: white;
+  color:
+    white;
 
 }
 
-button {
+.upload-button {
 
-  border: none;
+  margin-top:
+    18px;
 
-  border-radius: 12px;
+  width:
+    100%;
 
-  padding: 14px 20px;
+  padding:
+    16px;
 
-  cursor: pointer;
+  border:
+    none;
 
-  font-weight: bold;
+  border-radius:
+    13px;
 
-  color: white;
+  color:
+    white;
+
+  font-weight:
+    bold;
+
+  font-size:
+    16px;
+
+  cursor:
+    pointer;
 
   background:
     linear-gradient(
       135deg,
       #ff4fc3,
-      #9b5cff
+      #965cff
     );
 
 }
 
-button:hover {
+.upload-button:disabled {
 
-  opacity: 0.9;
+  opacity:
+    0.5;
 
-}
-
-button:disabled {
-
-  opacity: 0.5;
-
-  cursor: not-allowed;
+  cursor:
+    not-allowed;
 
 }
 
 .status {
 
-  margin-top: 15px;
+  margin-top:
+    15px;
 
-  min-height: 24px;
+  min-height:
+    24px;
 
-  color: #d8d2e7;
-
-}
-
-.search {
-
-  width: 100%;
-
-  padding: 15px 18px;
-
-  border: none;
-
-  border-radius: 14px;
-
-  background:
-    rgba(255,255,255,0.08);
-
-  color: white;
-
-  outline: none;
-
-  margin-bottom: 25px;
-
-}
-
-.movies {
-
-  display: grid;
-
-  grid-template-columns:
-    repeat(auto-fill, minmax(250px, 1fr));
-
-  gap: 20px;
-
-}
-
-.movie {
-
-  overflow: hidden;
-
-  border-radius: 18px;
-
-  background:
-    rgba(255,255,255,0.07);
-
-  border:
-    1px solid rgba(255,255,255,0.1);
-
-}
-
-.movie video {
-
-  display: block;
-
-  width: 100%;
-
-  aspect-ratio: 16 / 9;
-
-  background: black;
-
-}
-
-.movie-info {
-
-  padding: 17px;
-
-}
-
-.movie-title {
-
-  font-size: 18px;
-
-  font-weight: bold;
-
-  word-break: break-word;
-
-}
-
-.movie-date {
-
-  margin-top: 8px;
-
-  font-size: 13px;
-
-  color: #aaa3b8;
-
-}
-
-.delete {
-
-  margin-top: 14px;
-
-  width: 100%;
-
-  background:
-    rgba(255,70,100,0.8);
-
-}
-
-.empty {
-
-  text-align: center;
-
-  padding: 60px 20px;
-
-  color: #aaa3b8;
-
-}
-
-.loading {
-
-  text-align: center;
-
-  padding: 40px;
-
-  color: #cfc9df;
+  color:
+    #d9d2e7;
 
 }
 
 .progress {
 
-  width: 100%;
+  display:
+    none;
 
-  height: 8px;
+  width:
+    100%;
 
-  margin-top: 15px;
+  height:
+    8px;
 
-  border-radius: 10px;
+  margin-top:
+    15px;
 
-  overflow: hidden;
+  overflow:
+    hidden;
 
-  background: rgba(255,255,255,0.1);
+  border-radius:
+    20px;
 
-  display: none;
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.1
+    );
 
 }
 
 .progress-bar {
 
-  width: 0%;
+  width:
+    0%;
 
-  height: 100%;
+  height:
+    100%;
 
   background:
     linear-gradient(
       90deg,
       #ff4fc3,
-      #9b5cff
+      #965cff
     );
+
+}
+
+.search {
+
+  width:
+    100%;
+
+  padding:
+    16px;
+
+  margin-bottom:
+    25px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.1
+    );
+
+  border-radius:
+    14px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.06
+    );
+
+  color:
+    white;
+
+  outline:
+    none;
+
+}
+
+.movies {
+
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fill,
+      minmax(
+        260px,
+        1fr
+      )
+    );
+
+  gap:
+    22px;
+
+}
+
+.movie {
+
+  overflow:
+    hidden;
+
+  border-radius:
+    18px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.1
+    );
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.06
+    );
+
+}
+
+.poster {
+
+  position:
+    relative;
+
+  width:
+    100%;
+
+  aspect-ratio:
+    16 / 9;
+
+  overflow:
+    hidden;
+
+  background:
+    #050505;
+
+}
+
+.poster img {
+
+  width:
+    100%;
+
+  height:
+    100%;
+
+  object-fit:
+    cover;
+
+  display:
+    block;
+
+}
+
+.no-poster {
+
+  width:
+    100%;
+
+  height:
+    100%;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  color:
+    #777;
+
+  font-size:
+    45px;
+
+}
+
+.play-button {
+
+  position:
+    absolute;
+
+  left:
+    50%;
+
+  top:
+    50%;
+
+  transform:
+    translate(
+      -50%,
+      -50%
+    );
+
+  width:
+    65px;
+
+  height:
+    65px;
+
+  border:
+    none;
+
+  border-radius:
+    50%;
+
+  cursor:
+    pointer;
+
+  font-size:
+    24px;
+
+  color:
+    white;
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.65
+    );
+
+  backdrop-filter:
+    blur(5px);
+
+}
+
+.movie-info {
+
+  padding:
+    17px;
+
+}
+
+.movie-title {
+
+  font-size:
+    18px;
+
+  font-weight:
+    bold;
+
+  word-break:
+    break-word;
+
+}
+
+.movie-date {
+
+  margin-top:
+    8px;
+
+  color:
+    #9991aa;
+
+  font-size:
+    13px;
+
+}
+
+.delete-button {
+
+  width:
+    100%;
+
+  margin-top:
+    14px;
+
+  padding:
+    12px;
+
+  border:
+    none;
+
+  border-radius:
+    11px;
+
+  cursor:
+    pointer;
+
+  color:
+    white;
+
+  background:
+    rgba(
+      220,
+      50,
+      80,
+      0.8
+    );
+
+}
+
+.empty,
+.loading {
+
+  text-align:
+    center;
+
+  padding:
+    55px 20px;
+
+  color:
+    #aaa2b8;
+
+}
+
+.modal {
+
+  display:
+    none;
+
+  position:
+    fixed;
+
+  inset:
+    0;
+
+  z-index:
+    1000;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  padding:
+    20px;
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.85
+    );
+
+}
+
+.modal-content {
+
+  width:
+    min(
+      1000px,
+      100%
+    );
+
+  background:
+    #09080e;
+
+  border-radius:
+    18px;
+
+  overflow:
+    hidden;
+
+}
+
+.modal video {
+
+  width:
+    100%;
+
+  max-height:
+    80vh;
+
+  display:
+    block;
+
+  background:
+    black;
+
+}
+
+.close {
+
+  width:
+    100%;
+
+  padding:
+    14px;
+
+  border:
+    none;
+
+  cursor:
+    pointer;
+
+  color:
+    white;
+
+  background:
+    #201c2b;
 
 }
 
 footer {
 
-  text-align: center;
+  text-align:
+    center;
 
-  padding: 45px 0;
+  padding:
+    45px 0;
 
-  color: #777184;
+  color:
+    #777184;
+
+}
+
+@media (
+  max-width: 700px
+) {
+
+  .form-grid {
+
+    grid-template-columns:
+      1fr;
+
+  }
 
 }
 
@@ -370,21 +714,39 @@ cinematic experience.
 
 </header>
 
+<!-- ================================= -->
+<!-- UPLOAD -->
+<!-- ================================= -->
+
 <section class="card">
 
-<h2>Add a New Movie</h2>
+<h2>🎬 Add a New Movie</h2>
 
 <p>
-Upload your video and add it to your movie library.
+Upload your movie and choose a thumbnail/poster.
 </p>
 
-<div class="upload-row">
+<div class="form-grid">
+
+<div class="field">
+
+<label>
+Movie Title
+</label>
 
 <input
   id="title"
   type="text"
-  placeholder="Movie title"
+  placeholder="Enter movie title"
 />
+
+</div>
+
+<div class="field">
+
+<label>
+Video File
+</label>
 
 <input
   id="video"
@@ -392,38 +754,62 @@ Upload your video and add it to your movie library.
   accept="video/*"
 />
 
+</div>
+
+<div class="field">
+
+<label>
+Thumbnail / Poster
+</label>
+
+<input
+  id="poster"
+  type="file"
+  accept="image/jpeg,image/png,image/webp"
+/>
+
+</div>
+
+</div>
+
 <button
   id="uploadButton"
+  class="upload-button"
   onclick="uploadMovie()"
 >
 Upload Movie
 </button>
 
-</div>
-
-<div class="progress" id="progress">
+<div
+  id="progress"
+  class="progress"
+>
 
 <div
-  class="progress-bar"
   id="progressBar"
+  class="progress-bar"
 ></div>
 
 </div>
 
 <div
-  class="status"
   id="status"
+  class="status"
 ></div>
 
 </section>
 
+<!-- ================================= -->
+<!-- LIBRARY -->
+<!-- ================================= -->
+
 <section class="card">
 
-<h2>My Videos</h2>
+<h2>🍿 All Movies</h2>
 
 <input
-  class="search"
   id="search"
+  class="search"
   type="text"
   placeholder="🔎 Search your movies..."
   oninput="filterMovies()"
@@ -450,186 +836,371 @@ My Movie Watch
 
 </div>
 
+<!-- ================================= -->
+<!-- VIDEO MODAL -->
+<!-- ================================= -->
+
+<div
+  id="modal"
+  class="modal"
+  onclick="closeModal(event)"
+>
+
+<div
+  class="modal-content"
+  onclick="event.stopPropagation()"
+>
+
+<video
+  id="player"
+  controls
+  playsinline
+></video>
+
+<button
+  class="close"
+  onclick="closePlayer()"
+>
+Close
+</button>
+
+</div>
+
+</div>
+
 <script>
 
 let movies = [];
 
 
-// ===============================
+// =================================
 // LOAD MOVIES
-// ===============================
+// =================================
 
 async function loadMovies() {
 
   const list =
-    document.getElementById("movieList");
+    document.getElementById(
+      "movieList"
+    );
 
   list.innerHTML =
-    '<div class="loading">Loading your movies...</div>';
+    `
+    <div class="loading">
+      Loading your movies...
+    </div>
+    `;
 
   try {
 
     const response =
-      await fetch("/api/videos");
+      await fetch(
+        "/api/videos"
+      );
 
     if (!response.ok) {
 
       throw new Error(
-        "Server returned " +
+        "Server error: " +
         response.status
       );
 
     }
 
-    movies = await response.json();
+    movies =
+      await response.json();
 
-    renderMovies(movies);
+    renderMovies(
+      movies
+    );
 
   } catch (error) {
 
-    console.error(error);
+    console.error(
+      error
+    );
 
-    list.innerHTML = `
+    list.innerHTML =
+      `
       <div class="empty">
-        <h3>Could not load movies</h3>
+
+        <h3>
+          Could not load movies
+        </h3>
+
         <p>
-          Please refresh the page and try again.
+          Refresh the page and try again.
         </p>
+
       </div>
-    `;
+      `;
 
   }
 
 }
 
 
-// ===============================
+// =================================
 // RENDER MOVIES
-// ===============================
+// =================================
 
 function renderMovies(list) {
 
   const container =
-    document.getElementById("movieList");
+    document.getElementById(
+      "movieList"
+    );
+
+  container.innerHTML =
+    "";
 
   if (!list.length) {
 
-    container.innerHTML = `
+    container.innerHTML =
+      `
       <div class="empty">
-        <h3>No movies yet</h3>
+
+        <h3>
+          No movies yet
+        </h3>
+
         <p>
           Upload your first movie above.
         </p>
+
       </div>
-    `;
+      `;
 
     return;
 
   }
 
-  container.innerHTML = "";
+  list.forEach(
+    movie => {
 
-  list.forEach(movie => {
+      const card =
+        document.createElement(
+          "div"
+        );
 
-    const card =
-      document.createElement("div");
+      card.className =
+        "movie";
 
-    card.className = "movie";
+      // =================================
+      // POSTER
+      // =================================
 
-    const video =
-      document.createElement("video");
+      const poster =
+        document.createElement(
+          "div"
+        );
 
-    video.controls = true;
+      poster.className =
+        "poster";
 
-    video.preload = "metadata";
+      if (movie.poster) {
 
-    video.src = movie.url;
+        const image =
+          document.createElement(
+            "img"
+          );
 
-    video.setAttribute(
-      "playsinline",
-      ""
-    );
+        image.src =
+          movie.poster;
 
-    const info =
-      document.createElement("div");
+        image.alt =
+          movie.title;
 
-    info.className = "movie-info";
+        image.loading =
+          "lazy";
 
-    const title =
-      document.createElement("div");
+        poster.appendChild(
+          image
+        );
 
-    title.className = "movie-title";
+      } else {
 
-    title.textContent =
-      movie.title;
+        const noPoster =
+          document.createElement(
+            "div"
+          );
 
-    const date =
-      document.createElement("div");
+        noPoster.className =
+          "no-poster";
 
-    date.className = "movie-date";
+        noPoster.textContent =
+          "🎬";
 
-    date.textContent =
-      formatDate(movie.uploadedAt);
+        poster.appendChild(
+          noPoster
+        );
 
-    const deleteButton =
-      document.createElement("button");
+      }
 
-    deleteButton.className = "delete";
+      // =================================
+      // PLAY BUTTON
+      // =================================
 
-    deleteButton.textContent =
-      "Delete Movie";
+      const play =
+        document.createElement(
+          "button"
+        );
 
-    deleteButton.onclick =
-      () => deleteMovie(movie.id);
+      play.className =
+        "play-button";
 
-    info.appendChild(title);
+      play.textContent =
+        "▶";
 
-    info.appendChild(date);
+      play.onclick =
+        () =>
+          openPlayer(
+            movie.url
+          );
 
-    info.appendChild(deleteButton);
+      poster.appendChild(
+        play
+      );
 
-    card.appendChild(video);
+      // =================================
+      // INFO
+      // =================================
 
-    card.appendChild(info);
+      const info =
+        document.createElement(
+          "div"
+        );
 
-    container.appendChild(card);
+      info.className =
+        "movie-info";
 
-  });
+      const title =
+        document.createElement(
+          "div"
+        );
+
+      title.className =
+        "movie-title";
+
+      title.textContent =
+        movie.title;
+
+      const date =
+        document.createElement(
+          "div"
+        );
+
+      date.className =
+        "movie-date";
+
+      date.textContent =
+        formatDate(
+          movie.uploadedAt
+        );
+
+      // =================================
+      // DELETE
+      // =================================
+
+      const deleteButton =
+        document.createElement(
+          "button"
+        );
+
+      deleteButton.className =
+        "delete-button";
+
+      deleteButton.textContent =
+        "🗑️ Delete Movie";
+
+      deleteButton.onclick =
+        () =>
+          deleteMovie(
+            movie.id
+          );
+
+      info.appendChild(
+        title
+      );
+
+      info.appendChild(
+        date
+      );
+
+      info.appendChild(
+        deleteButton
+      );
+
+      card.appendChild(
+        poster
+      );
+
+      card.appendChild(
+        info
+      );
+
+      container.appendChild(
+        card
+      );
+
+    }
+  );
 
 }
 
 
-// ===============================
-// UPLOAD
-// ===============================
+// =================================
+// UPLOAD MOVIE
+// =================================
 
 function uploadMovie() {
 
   const titleInput =
-    document.getElementById("title");
+    document.getElementById(
+      "title"
+    );
 
-  const fileInput =
-    document.getElementById("video");
+  const videoInput =
+    document.getElementById(
+      "video"
+    );
+
+  const posterInput =
+    document.getElementById(
+      "poster"
+    );
 
   const button =
-    document.getElementById("uploadButton");
+    document.getElementById(
+      "uploadButton"
+    );
 
   const status =
-    document.getElementById("status");
+    document.getElementById(
+      "status"
+    );
 
   const progress =
-    document.getElementById("progress");
+    document.getElementById(
+      "progress"
+    );
 
   const progressBar =
-    document.getElementById("progressBar");
+    document.getElementById(
+      "progressBar"
+    );
 
-  const file =
-    fileInput.files[0];
+  const videoFile =
+    videoInput.files[0];
 
-  if (!file) {
+  const posterFile =
+    posterInput.files[0];
+
+  // VIDEO REQUIRED
+  if (!videoFile) {
 
     status.textContent =
-      "Please choose a video first.";
+      "❌ Please choose a video.";
 
     return;
 
@@ -640,8 +1211,17 @@ function uploadMovie() {
 
   formData.append(
     "video",
-    file
+    videoFile
   );
+
+  if (posterFile) {
+
+    formData.append(
+      "poster",
+      posterFile
+    );
+
+  }
 
   formData.append(
     "title",
@@ -656,7 +1236,8 @@ function uploadMovie() {
     "/api/upload"
   );
 
-  button.disabled = true;
+  button.disabled =
+    true;
 
   button.textContent =
     "Uploading...";
@@ -668,18 +1249,25 @@ function uploadMovie() {
     "0%";
 
   status.textContent =
-    "Uploading your movie...";
+    "Uploading movie...";
+
+  // =================================
+  // PROGRESS
+  // =================================
 
   xhr.upload.onprogress =
     function(event) {
 
-      if (event.lengthComputable) {
+      if (
+        event.lengthComputable
+      ) {
 
         const percent =
           Math.round(
-            event.loaded /
-            event.total *
-            100
+            (
+              event.loaded /
+              event.total
+            ) * 100
           );
 
         progressBar.style.width =
@@ -694,10 +1282,15 @@ function uploadMovie() {
 
     };
 
+  // =================================
+  // COMPLETE
+  // =================================
+
   xhr.onload =
     async function() {
 
-      button.disabled = false;
+      button.disabled =
+        false;
 
       button.textContent =
         "Upload Movie";
@@ -710,21 +1303,30 @@ function uploadMovie() {
         try {
 
           const result =
-            JSON.parse(xhr.responseText);
+            JSON.parse(
+              xhr.responseText
+            );
 
           if (!result.ok) {
+
             throw new Error(
               result.error ||
-              "Upload failed"
+              "Upload failed."
             );
+
           }
 
           status.textContent =
-            "✅ Movie uploaded successfully.";
+            "✅ Movie uploaded successfully!";
 
-          titleInput.value = "";
+          titleInput.value =
+            "";
 
-          fileInput.value = "";
+          videoInput.value =
+            "";
+
+          posterInput.value =
+            "";
 
           progressBar.style.width =
             "100%";
@@ -734,7 +1336,8 @@ function uploadMovie() {
         } catch (error) {
 
           status.textContent =
-            "❌ " + error.message;
+            "❌ " +
+            error.message;
 
         }
 
@@ -751,56 +1354,70 @@ function uploadMovie() {
             );
 
           if (result.error) {
+
             message =
               result.error;
+
           }
 
         } catch (_) {}
 
         status.textContent =
-          "❌ " + message;
+          "❌ " +
+          message;
 
       }
 
-      setTimeout(() => {
+      setTimeout(
+        () => {
 
-        progress.style.display =
-          "none";
+          progress.style.display =
+            "none";
 
-      }, 1500);
+        },
+        1500
+      );
 
     };
+
+  // =================================
+  // NETWORK ERROR
+  // =================================
 
   xhr.onerror =
     function() {
 
-      button.disabled = false;
+      button.disabled =
+        false;
 
       button.textContent =
         "Upload Movie";
 
       status.textContent =
-        "❌ Network error. Please try again.";
+        "❌ Network error. Try again.";
 
       progress.style.display =
         "none";
 
     };
 
-  xhr.send(formData);
+  xhr.send(
+    formData
+  );
 
 }
 
 
-// ===============================
+// =================================
 // DELETE
-// ===============================
+// =================================
 
 async function deleteMovie(id) {
 
   const movie =
     movies.find(
-      item => item.id === id
+      item =>
+        item.id === id
     );
 
   if (!movie) {
@@ -811,7 +1428,8 @@ async function deleteMovie(id) {
     confirm(
       'Delete "' +
       movie.title +
-      '"?'
+      '"?\n\n' +
+      "Video and thumbnail will both be deleted."
     );
 
   if (!confirmed) {
@@ -823,20 +1441,26 @@ async function deleteMovie(id) {
     const response =
       await fetch(
         "/api/videos/" +
-        encodeURIComponent(id),
+        encodeURIComponent(
+          id
+        ),
         {
-          method: "DELETE"
+          method:
+            "DELETE"
         }
       );
 
     const result =
       await response.json();
 
-    if (!response.ok || !result.ok) {
+    if (
+      !response.ok ||
+      !result.ok
+    ) {
 
       throw new Error(
         result.error ||
-        "Delete failed"
+        "Delete failed."
       );
 
     }
@@ -855,34 +1479,109 @@ async function deleteMovie(id) {
 }
 
 
-// ===============================
+// =================================
 // SEARCH
-// ===============================
+// =================================
 
 function filterMovies() {
 
   const query =
     document
-      .getElementById("search")
+      .getElementById(
+        "search"
+      )
       .value
       .toLowerCase()
       .trim();
 
   const filtered =
-    movies.filter(movie =>
-      movie.title
-        .toLowerCase()
-        .includes(query)
+    movies.filter(
+      movie =>
+        movie.title
+          .toLowerCase()
+          .includes(
+            query
+          )
     );
 
-  renderMovies(filtered);
+  renderMovies(
+    filtered
+  );
 
 }
 
 
-// ===============================
+// =================================
+// VIDEO PLAYER
+// =================================
+
+function openPlayer(url) {
+
+  const modal =
+    document.getElementById(
+      "modal"
+    );
+
+  const player =
+    document.getElementById(
+      "player"
+    );
+
+  player.src =
+    url;
+
+  modal.style.display =
+    "flex";
+
+  player.play()
+    .catch(
+      () => {}
+    );
+
+}
+
+function closePlayer() {
+
+  const modal =
+    document.getElementById(
+      "modal"
+    );
+
+  const player =
+    document.getElementById(
+      "player"
+    );
+
+  player.pause();
+
+  player.removeAttribute(
+    "src"
+  );
+
+  player.load();
+
+  modal.style.display =
+    "none";
+
+}
+
+function closeModal(event) {
+
+  if (
+    event.target.id ===
+    "modal"
+  ) {
+
+    closePlayer();
+
+  }
+
+}
+
+
+// =================================
 // DATE
-// ===============================
+// =================================
 
 function formatDate(date) {
 
@@ -892,10 +1591,13 @@ function formatDate(date) {
 
   try {
 
-    return new Date(date)
-      .toLocaleString();
+    return new Date(
+      date
+    ).toLocaleString();
 
-  } catch (error) {
+  } catch (
+    error
+  ) {
 
     return "";
 
@@ -904,9 +1606,9 @@ function formatDate(date) {
 }
 
 
-// ===============================
+// =================================
 // START
-// ===============================
+// =================================
 
 loadMovies();
 
