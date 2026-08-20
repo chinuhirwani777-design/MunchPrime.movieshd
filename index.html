@@ -1,18 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>My Movie Watch</title>
 
   <style>
-
     * {
       box-sizing: border-box;
     }
@@ -21,569 +15,1041 @@
       margin: 0;
       font-family: Arial, sans-serif;
       background:
-        linear-gradient(
-          135deg,
-          #12051f,
-          #090b20,
-          #16051f
-        );
+        radial-gradient(circle at top left, #35156b, transparent 40%),
+        radial-gradient(circle at top right, #6b164f, transparent 35%),
+        #090812;
       color: white;
       min-height: 100vh;
     }
 
+    .container {
+      width: min(1100px, 92%);
+      margin: auto;
+    }
+
     header {
-      padding: 45px 20px;
-      text-align: center;
-      background:
-        linear-gradient(
-          135deg,
-          #7c3aed,
-          #ec4899
-        );
+      padding: 55px 0 35px;
     }
 
     header h1 {
+      font-size: clamp(38px, 7vw, 72px);
       margin: 0;
-      font-size: 45px;
+      font-weight: 800;
+    }
+
+    header h1 span {
+      color: #e879f9;
     }
 
     header p {
-      opacity: .85;
+      color: #c7bdd5;
+      max-width: 650px;
+      line-height: 1.6;
     }
 
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 30px 20px;
+    .section-title {
+      margin-top: 25px;
+      margin-bottom: 15px;
+    }
+
+    .section-title small {
+      color: #b7a9c5;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 11px;
+    }
+
+    .section-title h2 {
+      margin: 5px 0;
+      font-size: 32px;
     }
 
     .upload-box {
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.15);
-      border-radius: 20px;
+      background: rgba(100, 60, 130, 0.35);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 22px;
       padding: 25px;
-      margin-bottom: 30px;
+      margin-bottom: 40px;
+      backdrop-filter: blur(12px);
     }
 
-    .upload-box h2 {
-      margin-top: 0;
+    .upload-title {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      margin-bottom: 20px;
     }
 
-    input {
+    .upload-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #e85df5;
+      font-size: 25px;
+    }
+
+    .upload-title h3 {
+      margin: 0 0 5px;
+    }
+
+    .upload-title p {
+      margin: 0;
+      color: #c6bdd0;
+      font-size: 13px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 160px;
+      gap: 10px;
+    }
+
+    input[type="text"],
+    input[type="file"] {
       width: 100%;
       padding: 14px;
-      margin: 8px 0;
       border-radius: 10px;
-      border: 1px solid #555;
-      background: #151526;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.3);
       color: white;
+      outline: none;
     }
 
     input[type="file"] {
-      padding: 10px;
+      padding: 11px;
     }
 
     button {
-      border: 0;
-      padding: 14px 22px;
+      border: none;
       border-radius: 10px;
+      padding: 14px 18px;
       cursor: pointer;
-      font-weight: bold;
-      background: linear-gradient(
-        135deg,
-        #ec4899,
-        #8b5cf6
-      );
       color: white;
-      margin-top: 10px;
+      font-weight: bold;
+      background: linear-gradient(135deg, #e855ef, #a855f7);
+    }
+
+    button:hover {
+      opacity: 0.9;
     }
 
     button:disabled {
-      opacity: .5;
+      opacity: 0.5;
       cursor: not-allowed;
     }
 
-    #status {
-      margin-top: 15px;
-      font-weight: bold;
+    .search {
+      margin-bottom: 25px;
     }
 
-    .preview {
-      display: none;
-      width: 220px;
-      margin-top: 15px;
-      border-radius: 12px;
+    .search input {
+      width: 100%;
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(30,20,40,0.7);
+      color: white;
+      outline: none;
+      font-size: 15px;
     }
 
     .movies {
       display: grid;
-      grid-template-columns:
-        repeat(
-          auto-fill,
-          minmax(240px, 1fr)
-        );
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 22px;
+      padding-bottom: 70px;
     }
 
     .movie {
-      background: rgba(255,255,255,.08);
-      border-radius: 16px;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 18px;
+      background: rgba(30, 20, 40, 0.85);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
     }
 
     .poster {
       width: 100%;
-      height: 300px;
-      object-fit: cover;
-      background: #111;
-    }
-
-    .no-poster {
-      width: 100%;
-      height: 300px;
+      aspect-ratio: 16 / 9;
+      background: #18131f;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #17172a;
-      color: #aaa;
+      overflow: hidden;
+    }
+
+    .poster img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .poster-placeholder {
+      color: #8e8198;
+      font-size: 40px;
     }
 
     .movie-info {
-      padding: 15px;
+      padding: 16px;
     }
 
-    .movie-title {
+    .movie-info h3 {
+      margin: 0 0 8px;
       font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 12px;
+      word-break: break-word;
     }
 
-    video {
-      width: 100%;
-      max-height: 450px;
-      background: black;
-      border-radius: 10px;
-      margin-top: 10px;
+    .movie-info small {
+      color: #988da2;
     }
 
-    .delete {
-      background: #dc2626;
-      width: 100%;
+    .movie-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
     }
 
-    .empty {
+    .watch-btn {
+      flex: 1;
+    }
+
+    .delete-btn {
+      background: #7f1d1d;
+    }
+
+    .empty,
+    .loading {
+      grid-column: 1 / -1;
       text-align: center;
-      padding: 50px;
-      opacity: .6;
+      padding: 60px 20px;
+      color: #aaa0b0;
     }
 
+    .status {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 10px;
+      display: none;
+      font-size: 14px;
+    }
+
+    .status.show {
+      display: block;
+    }
+
+    .status.success {
+      background: rgba(34,197,94,0.15);
+      color: #86efac;
+    }
+
+    .status.error {
+      background: rgba(239,68,68,0.15);
+      color: #fca5a5;
+    }
+
+    .progress-wrap {
+      display: none;
+      margin-top: 15px;
+    }
+
+    .progress-wrap.show {
+      display: block;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #e855ef, #a855f7);
+      transition: width 0.2s;
+    }
+
+    .progress-text {
+      display: block;
+      margin-top: 7px;
+      color: #aaa;
+      font-size: 12px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0,0,0,0.9);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      width: min(1000px, 100%);
+      background: #100c17;
+      border-radius: 18px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .modal video {
+      display: block;
+      width: 100%;
+      max-height: 80vh;
+      background: black;
+    }
+
+    .close {
+      position: absolute;
+      right: 12px;
+      top: 12px;
+      z-index: 2;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.7);
+      font-size: 20px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #83778b;
+      font-size: 13px;
+    }
+
+    @media (max-width: 750px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .movies {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 
 <body>
 
-<header>
+  <div class="container">
 
-  <h1>My Movie Watch</h1>
+    <header>
+      <h1>Your <span>Collection.</span></h1>
+      <p>
+        Watch your personal movie collection anytime, anywhere
+        with a beautiful cinematic experience.
+      </p>
+    </header>
 
-  <p>
-    Your personal movie collection
-  </p>
+    <div class="section-title">
+      <small>Your Collection</small>
+      <h2>My Videos</h2>
+    </div>
 
-</header>
+    <div class="search">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="🔍 Search your movies..."
+      >
+    </div>
 
-<div class="container">
+    <div class="upload-box">
 
-  <div class="upload-box">
+      <div class="upload-title">
+        <div class="upload-icon">⬆</div>
 
-    <h2>
-      🎬 Add a New Movie
-    </h2>
+        <div>
+          <h3>Add a New Movie</h3>
+          <p>
+            Upload your video and optional thumbnail
+            to your private library.
+          </p>
+        </div>
+      </div>
 
-    <input
-      id="title"
-      type="text"
-      placeholder="Movie title"
+      <form id="uploadForm">
+
+        <div class="form-row">
+
+          <input
+            type="text"
+            id="title"
+            name="title"
+            placeholder="Movie title"
+            maxlength="150"
+          >
+
+          <input
+            type="file"
+            id="video"
+            name="video"
+            accept="video/*"
+            required
+          >
+
+          <input
+            type="file"
+            id="poster"
+            name="poster"
+            accept="image/*"
+          >
+
+        </div>
+
+        <br>
+
+        <button
+          type="submit"
+          id="uploadButton"
+        >
+          ⬆ Upload Movie
+        </button>
+
+      </form>
+
+      <div
+        id="progressWrap"
+        class="progress-wrap"
+      >
+        <div class="progress-bar">
+          <div
+            id="progress"
+            class="progress"
+          ></div>
+        </div>
+
+        <span
+          id="progressText"
+          class="progress-text"
+        >
+          Uploading 0%
+        </span>
+      </div>
+
+      <div
+        id="status"
+        class="status"
+      ></div>
+
+    </div>
+
+    <div class="section-title">
+      <small>Library</small>
+      <h2>All Movies</h2>
+    </div>
+
+    <div
+      id="movies"
+      class="movies"
     >
-
-    <input
-      id="video"
-      type="file"
-      accept="video/*"
-    >
-
-    <input
-      id="poster"
-      type="file"
-      accept="image/jpeg,image/png,image/webp"
-    >
-
-    <img
-      id="preview"
-      class="preview"
-      alt="Thumbnail preview"
-    >
-
-    <br>
-
-    <button
-      id="uploadBtn"
-      onclick="uploadMovie()"
-    >
-      Upload Movie
-    </button>
-
-    <div id="status"></div>
+      <div class="loading">
+        Loading your movies...
+      </div>
+    </div>
 
   </div>
 
-  <h2>
-    🎥 My Movies
-  </h2>
+  <footer>
+    🎬 My Movie Watch<br>
+    Private movie library made for personal use
+  </footer>
+
+  <!-- VIDEO MODAL -->
 
   <div
-    id="movies"
-    class="movies"
-  ></div>
+    id="modal"
+    class="modal"
+  >
 
-</div>
+    <div class="modal-content">
 
-<script>
+      <button
+        class="close"
+        onclick="closePlayer()"
+      >
+        ✕
+      </button>
 
-  const titleInput =
-    document.getElementById("title");
+      <video
+        id="player"
+        controls
+        playsinline
+      ></video>
 
-  const videoInput =
-    document.getElementById("video");
+    </div>
 
-  const posterInput =
-    document.getElementById("poster");
+  </div>
 
-  const preview =
-    document.getElementById("preview");
 
-  const statusBox =
-    document.getElementById("status");
+  <script>
 
-  const uploadBtn =
-    document.getElementById("uploadBtn");
+    let allMovies = [];
 
-  // =========================
-  // THUMBNAIL PREVIEW
-  // =========================
+    const uploadForm =
+      document.getElementById("uploadForm");
 
-  posterInput.addEventListener(
-    "change",
-    () => {
+    const titleInput =
+      document.getElementById("title");
 
-      const file =
-        posterInput.files[0];
+    const videoInput =
+      document.getElementById("video");
 
-      if (!file) {
+    const posterInput =
+      document.getElementById("poster");
 
-        preview.style.display =
-          "none";
+    const uploadButton =
+      document.getElementById("uploadButton");
 
-        return;
+    const moviesContainer =
+      document.getElementById("movies");
+
+    const searchInput =
+      document.getElementById("searchInput");
+
+    const statusBox =
+      document.getElementById("status");
+
+    const progressWrap =
+      document.getElementById("progressWrap");
+
+    const progress =
+      document.getElementById("progress");
+
+    const progressText =
+      document.getElementById("progressText");
+
+    const modal =
+      document.getElementById("modal");
+
+    const player =
+      document.getElementById("player");
+
+
+    // =========================
+    // STATUS MESSAGE
+    // =========================
+
+    function showStatus(message, type) {
+
+      statusBox.textContent = message;
+
+      statusBox.className =
+        "status show " + type;
+
+    }
+
+
+    // =========================
+    // LOAD VIDEOS
+    // =========================
+
+    async function loadVideos() {
+
+      try {
+
+        moviesContainer.innerHTML =
+          '<div class="loading">Loading your movies...</div>';
+
+        const response =
+          await fetch("/api/videos");
+
+        if (!response.ok) {
+          throw new Error(
+            "Could not load movies"
+          );
+        }
+
+        allMovies =
+          await response.json();
+
+        renderMovies(allMovies);
+
+      } catch (error) {
+
+        console.error(error);
+
+        moviesContainer.innerHTML =
+          '<div class="empty">Could not load movies.</div>';
 
       }
 
-      preview.src =
-        URL.createObjectURL(file);
-
-      preview.style.display =
-        "block";
-
-    }
-  );
-
-  // =========================
-  // UPLOAD
-  // =========================
-
-  async function uploadMovie() {
-
-    const title =
-      titleInput.value.trim();
-
-    const video =
-      videoInput.files[0];
-
-    const poster =
-      posterInput.files[0];
-
-    if (!title) {
-
-      statusBox.textContent =
-        "❌ Please enter movie title.";
-
-      return;
-
     }
 
-    if (!video) {
 
-      statusBox.textContent =
-        "❌ Please select a video.";
+    // =========================
+    // RENDER MOVIES
+    // =========================
 
-      return;
-
-    }
-
-    uploadBtn.disabled = true;
-
-    statusBox.textContent =
-      "⏳ Uploading movie...";
-
-    try {
-
-      const formData =
-        new FormData();
-
-      // IMPORTANT:
-      // These names MUST match server.js
-
-      formData.append(
-        "title",
-        title
-      );
-
-      formData.append(
-        "video",
-        video
-      );
-
-      if (poster) {
-
-        formData.append(
-          "poster",
-          poster
-        );
-
-      }
-
-      const response =
-        await fetch(
-          "/api/upload",
-          {
-            method: "POST",
-            body: formData
-          }
-        );
-
-      const result =
-        await response.json();
-
-      if (!response.ok) {
-
-        throw new Error(
-          result.error ||
-          "Upload failed"
-        );
-
-      }
-
-      statusBox.textContent =
-        "✅ Movie uploaded successfully!";
-
-      titleInput.value = "";
-      videoInput.value = "";
-      posterInput.value = "";
-
-      preview.style.display =
-        "none";
-
-      await loadMovies();
-
-    } catch (error) {
-
-      console.error(error);
-
-      statusBox.textContent =
-        "❌ " +
-        error.message;
-
-    }
-
-    uploadBtn.disabled = false;
-
-  }
-
-  // =========================
-  // LOAD MOVIES
-  // =========================
-
-  async function loadMovies() {
-
-    const container =
-      document.getElementById(
-        "movies"
-      );
-
-    container.innerHTML =
-      "<div class='empty'>Loading movies...</div>";
-
-    try {
-
-      const response =
-        await fetch(
-          "/api/videos"
-        );
-
-      const movies =
-        await response.json();
+    function renderMovies(movies) {
 
       if (!movies.length) {
 
-        container.innerHTML =
-          "<div class='empty'>" +
-          "No movies uploaded yet." +
-          "</div>";
+        moviesContainer.innerHTML =
+          '<div class="empty">🎬 No movies uploaded yet.</div>';
 
         return;
-
       }
 
-      container.innerHTML =
-        movies.map(movie => {
+      moviesContainer.innerHTML = "";
 
-          const posterHTML =
-            movie.poster
+      movies.forEach(movie => {
 
-              ? `
-                <img
-                  class="poster"
-                  src="${movie.poster}"
-                  alt="${escapeHTML(movie.title)}"
-                >
-              `
+        const card =
+          document.createElement("div");
 
-              : `
-                <div class="no-poster">
-                  No Thumbnail
-                </div>
-              `;
+        card.className = "movie";
 
-          return `
+        const posterHTML =
+          movie.poster
+            ? `<img src="${movie.poster}" alt="">`
+            : `<div class="poster-placeholder">🎬</div>`;
 
-            <div class="movie">
+        card.innerHTML = `
 
-              ${posterHTML}
+          <div class="poster">
+            ${posterHTML}
+          </div>
 
-              <div class="movie-info">
+          <div class="movie-info">
 
-                <div class="movie-title">
-                  ${escapeHTML(movie.title)}
-                </div>
+            <h3>
+              ${escapeHTML(movie.title || "Untitled")}
+            </h3>
 
-                <video
-                  controls
-                  preload="metadata"
-                  src="${movie.url}"
-                ></video>
+            <small>
+              ${formatSize(movie.size)}
+            </small>
 
-                <button
-                  class="delete"
-                  onclick="deleteMovie('${movie.id}')"
-                >
-                  🗑 Delete Movie
-                </button>
+            <div class="movie-actions">
 
-              </div>
+              <button
+                class="watch-btn"
+                onclick="playMovie('${movie.url}')"
+              >
+                ▶ Watch
+              </button>
+
+              <button
+                class="delete-btn"
+                onclick="deleteMovie('${movie.id}')"
+              >
+                🗑
+              </button>
 
             </div>
 
-          `;
+          </div>
 
-        }).join("");
+        `;
 
-    } catch (error) {
+        moviesContainer.appendChild(card);
 
-      container.innerHTML =
-        "<div class='empty'>" +
-        "❌ Could not load movies." +
-        "</div>";
-
-      console.error(error);
+      });
 
     }
 
-  }
 
-  // =========================
-  // DELETE
-  // =========================
+    // =========================
+    // UPLOAD
+    // =========================
 
-  async function deleteMovie(id) {
+    uploadForm.addEventListener(
+      "submit",
+      function(event) {
 
-    const confirmDelete =
-      confirm(
-        "Delete this movie?"
-      );
+        event.preventDefault();
 
-    if (!confirmDelete) {
-      return;
-    }
+        const video =
+          videoInput.files[0];
 
-    try {
+        const poster =
+          posterInput.files[0];
 
-      const response =
-        await fetch(
-          "/api/videos/" +
-          encodeURIComponent(id),
-          {
-            method: "DELETE"
-          }
+        let title =
+          titleInput.value.trim();
+
+        if (!video) {
+
+          showStatus(
+            "Please select a video.",
+            "error"
+          );
+
+          return;
+        }
+
+        if (!title) {
+
+          title =
+            video.name
+              .replace(/\.[^/.]+$/, "");
+
+        }
+
+        const formData =
+          new FormData();
+
+        formData.append(
+          "title",
+          title
         );
 
-      const result =
-        await response.json();
+        formData.append(
+          "video",
+          video
+        );
 
-      if (!response.ok) {
+        if (poster) {
 
-        throw new Error(
-          result.error ||
-          "Delete failed"
+          formData.append(
+            "poster",
+            poster
+          );
+
+        }
+
+        uploadButton.disabled = true;
+
+        progressWrap.classList.add("show");
+
+        progress.style.width = "0%";
+
+        progressText.textContent =
+          "Uploading 0%";
+
+        statusBox.className = "status";
+
+
+        const xhr =
+          new XMLHttpRequest();
+
+        xhr.open(
+          "POST",
+          "/api/upload"
+        );
+
+        xhr.upload.onprogress =
+          function(event) {
+
+            if (event.lengthComputable) {
+
+              const percent =
+                Math.round(
+                  (event.loaded /
+                   event.total) * 100
+                );
+
+              progress.style.width =
+                percent + "%";
+
+              progressText.textContent =
+                "Uploading " +
+                percent +
+                "%";
+
+            }
+
+          };
+
+
+        xhr.onload =
+          async function() {
+
+            uploadButton.disabled = false;
+
+            progressWrap.classList.remove(
+              "show"
+            );
+
+            if (
+              xhr.status >= 200 &&
+              xhr.status < 300
+            ) {
+
+              try {
+
+                const result =
+                  JSON.parse(xhr.responseText);
+
+                if (!result.ok) {
+                  throw new Error(
+                    result.error ||
+                    "Upload failed"
+                  );
+                }
+
+                showStatus(
+                  "Movie uploaded successfully!",
+                  "success"
+                );
+
+                uploadForm.reset();
+
+                await loadVideos();
+
+              } catch (error) {
+
+                showStatus(
+                  error.message,
+                  "error"
+                );
+
+              }
+
+            } else {
+
+              let message =
+                "Upload failed.";
+
+              try {
+
+                const result =
+                  JSON.parse(
+                    xhr.responseText
+                  );
+
+                if (result.error) {
+                  message =
+                    result.error;
+                }
+
+              } catch (e) {}
+
+              showStatus(
+                message,
+                "error"
+              );
+
+            }
+
+          };
+
+
+        xhr.onerror =
+          function() {
+
+            uploadButton.disabled = false;
+
+            progressWrap.classList.remove(
+              "show"
+            );
+
+            showStatus(
+              "Network error. Please try again.",
+              "error"
+            );
+
+          };
+
+
+        xhr.send(formData);
+
+      }
+    );
+
+
+    // =========================
+    // SEARCH
+    // =========================
+
+    searchInput.addEventListener(
+      "input",
+      function() {
+
+        const query =
+          searchInput.value
+            .toLowerCase()
+            .trim();
+
+        const filtered =
+          allMovies.filter(movie =>
+            (movie.title || "")
+              .toLowerCase()
+              .includes(query)
+          );
+
+        renderMovies(filtered);
+
+      }
+    );
+
+
+    // =========================
+    // PLAY VIDEO
+    // =========================
+
+    function playMovie(url) {
+
+      player.src = url;
+
+      modal.classList.add("show");
+
+      player.play().catch(() => {});
+
+    }
+
+
+    // =========================
+    // CLOSE PLAYER
+    // =========================
+
+    function closePlayer() {
+
+      player.pause();
+
+      player.removeAttribute("src");
+
+      player.load();
+
+      modal.classList.remove("show");
+
+    }
+
+
+    modal.addEventListener(
+      "click",
+      function(event) {
+
+        if (event.target === modal) {
+          closePlayer();
+        }
+
+      }
+    );
+
+
+    // =========================
+    // DELETE VIDEO
+    // =========================
+
+    async function deleteMovie(id) {
+
+      const confirmDelete =
+        confirm(
+          "Are you sure you want to delete this movie?"
+        );
+
+      if (!confirmDelete) {
+        return;
+      }
+
+      try {
+
+        const response =
+          await fetch(
+            "/api/videos/" +
+            encodeURIComponent(id),
+            {
+              method: "DELETE"
+            }
+          );
+
+        const result =
+          await response.json();
+
+        if (!response.ok) {
+
+          throw new Error(
+            result.error ||
+            "Delete failed"
+          );
+
+        }
+
+        showStatus(
+          "Movie deleted successfully.",
+          "success"
+        );
+
+        loadVideos();
+
+      } catch (error) {
+
+        showStatus(
+          error.message,
+          "error"
         );
 
       }
 
-      await loadMovies();
+    }
 
-    } catch (error) {
 
-      alert(
-        "❌ " +
-        error.message
+    // =========================
+    // ESCAPE HTML
+    // =========================
+
+    function escapeHTML(value) {
+
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    }
+
+
+    // =========================
+    // FILE SIZE
+    // =========================
+
+    function formatSize(bytes) {
+
+      if (!bytes) {
+        return "";
+      }
+
+      const units =
+        ["B", "KB", "MB", "GB"];
+
+      let size = bytes;
+
+      let index = 0;
+
+      while (
+        size >= 1024 &&
+        index < units.length - 1
+      ) {
+
+        size /= 1024;
+
+        index++;
+
+      }
+
+      return (
+        size.toFixed(1) +
+        " " +
+        units[index]
       );
 
     }
 
-  }
 
-  // =========================
-  // HTML ESCAPE
-  // =========================
+    // =========================
+    // START
+    // =========================
 
-  function escapeHTML(value) {
+    loadVideos();
 
-    return String(value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-
-  }
-
-  // =========================
-  // START
-  // =========================
-
-  loadMovies();
-
-</script>
+  </script>
 
 </body>
 </html>
