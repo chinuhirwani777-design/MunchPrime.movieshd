@@ -9,7 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Website password
-const PASSWORD = "friends123";
+const PASSWORD = "123";
 
 // Folders
 const publicDir = __dirname;
