@@ -1,7 +1,7 @@
 {
   "name": "my-movie-watch",
   "version": "1.0.0",
-  "description": "Private movie collection website",
+  "description": "Movie collection website with video and thumbnail upload",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
