@@ -97,7 +97,7 @@ function writeDB(data) {
     cb(null, true);
   }
 
-});
+
 
 /* =========================
    HOME PAGE
