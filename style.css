@@ -424,9 +424,9 @@ main{
     gap:12px;
   }
 
-  .movie .thumb{
-    height:115px;
-  }
+  .thumb-wrap{
+  height:230px;
+}
 
   .movie h3{
     font-size:14px;
@@ -452,7 +452,6 @@ main{
     grid-template-columns:1fr;
   }
 
-  .movie .thumb{
-    height:170px;
-  }
+.thumb-wrap{
+  height:300px;
 }
