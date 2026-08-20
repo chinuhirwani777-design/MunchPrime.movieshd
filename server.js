@@ -74,39 +74,6 @@ function writeDB(data) {
    FILE UPLOAD
 ========================= */
 
-const storage = multer.diskStorage({
-
-  destination: (req, file, cb) => {
-    cb(null, videoDir);
-  },
-
-  filename: (req, file, cb) => {
-
-    const ext = path.extname(file.originalname);
-
-    const safeName =
-      path.basename(file.originalname, ext)
-        .replace(/[^a-zA-Z0-9_-]/g, "_")
-        .slice(0, 80);
-
-    const filename =
-      Date.now() +
-      "_" +
-      safeName +
-      ext.toLowerCase();
-
-    cb(null, filename);
-  }
-});
-
-const upload = multer({
-
-  storage,
-
-  limits: {
-    fileSize: 8 * 1024 * 1024 * 1024
-  },
-
   fileFilter: (req, file, cb) => {
 
     const allowed = [
