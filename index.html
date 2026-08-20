@@ -1,226 +1,917 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>My Movie Watch</title>
+<meta charset="UTF-8">
 
-  <meta name="theme-color" content="#090712">
-  <meta name="description" content="My private movie library">
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
 
-  <link rel="stylesheet" href="style.css">
+<title>My Movie Watch</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+
+  margin: 0;
+
+  min-height: 100vh;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  background:
+    radial-gradient(
+      circle at top,
+      #4b1f75 0%,
+      #171226 40%,
+      #080711 100%
+    );
+
+  color: white;
+
+}
+
+.container {
+
+  width: min(1100px, 94%);
+
+  margin: auto;
+
+}
+
+header {
+
+  padding: 55px 0 35px;
+
+}
+
+header h1 {
+
+  margin: 0;
+
+  font-size: clamp(38px, 7vw, 70px);
+
+}
+
+header p {
+
+  color: #cfc9df;
+
+  font-size: 17px;
+
+  max-width: 650px;
+
+  line-height: 1.6;
+
+}
+
+.card {
+
+  background:
+    rgba(255,255,255,0.08);
+
+  border:
+    1px solid rgba(255,255,255,0.12);
+
+  border-radius: 22px;
+
+  padding: 24px;
+
+  margin-bottom: 25px;
+
+  backdrop-filter: blur(15px);
+
+}
+
+.card h2 {
+
+  margin-top: 0;
+
+}
+
+.upload-row {
+
+  display: flex;
+
+  gap: 12px;
+
+  flex-wrap: wrap;
+
+}
+
+input[type="text"] {
+
+  flex: 1;
+
+  min-width: 220px;
+
+  padding: 15px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  background: rgba(0,0,0,0.35);
+
+  color: white;
+
+  outline: none;
+
+}
+
+input[type="file"] {
+
+  flex: 1;
+
+  min-width: 220px;
+
+  padding: 12px;
+
+  border-radius: 12px;
+
+  background: rgba(0,0,0,0.35);
+
+  color: white;
+
+}
+
+button {
+
+  border: none;
+
+  border-radius: 12px;
+
+  padding: 14px 20px;
+
+  cursor: pointer;
+
+  font-weight: bold;
+
+  color: white;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff4fc3,
+      #9b5cff
+    );
+
+}
+
+button:hover {
+
+  opacity: 0.9;
+
+}
+
+button:disabled {
+
+  opacity: 0.5;
+
+  cursor: not-allowed;
+
+}
+
+.status {
+
+  margin-top: 15px;
+
+  min-height: 24px;
+
+  color: #d8d2e7;
+
+}
+
+.search {
+
+  width: 100%;
+
+  padding: 15px 18px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  background:
+    rgba(255,255,255,0.08);
+
+  color: white;
+
+  outline: none;
+
+  margin-bottom: 25px;
+
+}
+
+.movies {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fill, minmax(250px, 1fr));
+
+  gap: 20px;
+
+}
+
+.movie {
+
+  overflow: hidden;
+
+  border-radius: 18px;
+
+  background:
+    rgba(255,255,255,0.07);
+
+  border:
+    1px solid rgba(255,255,255,0.1);
+
+}
+
+.movie video {
+
+  display: block;
+
+  width: 100%;
+
+  aspect-ratio: 16 / 9;
+
+  background: black;
+
+}
+
+.movie-info {
+
+  padding: 17px;
+
+}
+
+.movie-title {
+
+  font-size: 18px;
+
+  font-weight: bold;
+
+  word-break: break-word;
+
+}
+
+.movie-date {
+
+  margin-top: 8px;
+
+  font-size: 13px;
+
+  color: #aaa3b8;
+
+}
+
+.delete {
+
+  margin-top: 14px;
+
+  width: 100%;
+
+  background:
+    rgba(255,70,100,0.8);
+
+}
+
+.empty {
+
+  text-align: center;
+
+  padding: 60px 20px;
+
+  color: #aaa3b8;
+
+}
+
+.loading {
+
+  text-align: center;
+
+  padding: 40px;
+
+  color: #cfc9df;
+
+}
+
+.progress {
+
+  width: 100%;
+
+  height: 8px;
+
+  margin-top: 15px;
+
+  border-radius: 10px;
+
+  overflow: hidden;
+
+  background: rgba(255,255,255,0.1);
+
+  display: none;
+
+}
+
+.progress-bar {
+
+  width: 0%;
+
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      #ff4fc3,
+      #9b5cff
+    );
+
+}
+
+footer {
+
+  text-align: center;
+
+  padding: 45px 0;
+
+  color: #777184;
+
+}
+
+</style>
+
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <header class="topbar">
+<div class="container">
 
-    <div class="brand">
-      <div class="brand-icon">🎬</div>
+<header>
 
-      <div>
-        <div class="brand-name">My Movie Watch</div>
-        <div class="brand-subtitle">PRIVATE MOVIE LIBRARY</div>
-      </div>
-    </div>
+<h1>Your Collection.</h1>
 
-  </header>
+<p>
+Watch your personal movie collection
+anytime, anywhere with a beautiful
+cinematic experience.
+</p>
+
+</header>
+
+<section class="card">
+
+<h2>Add a New Movie</h2>
+
+<p>
+Upload your video and add it to your movie library.
+</p>
+
+<div class="upload-row">
+
+<input
+  id="title"
+  type="text"
+  placeholder="Movie title"
+/>
+
+<input
+  id="video"
+  type="file"
+  accept="video/*"
+/>
+
+<button
+  id="uploadButton"
+  onclick="uploadMovie()"
+>
+Upload Movie
+</button>
+
+</div>
+
+<div class="progress" id="progress">
+
+<div
+  class="progress-bar"
+  id="progressBar"
+></div>
+
+</div>
+
+<div
+  class="status"
+  id="status"
+></div>
+
+</section>
+
+<section class="card">
+
+<h2>My Videos</h2>
+
+<input
+  class="search"
+  id="search"
+  type="text"
+  placeholder="🔎 Search your movies..."
+  oninput="filterMovies()"
+/>
+
+<div
+  id="movieList"
+  class="movies"
+>
+
+<div class="loading">
+Loading your movies...
+</div>
+
+</div>
+
+</section>
+
+<footer>
+
+My Movie Watch
+
+</footer>
+
+</div>
+
+<script>
+
+let movies = [];
 
 
-  <!-- MAIN -->
-  <main id="app">
+// ===============================
+// LOAD MOVIES
+// ===============================
 
-    <!-- HERO -->
-    <section class="hero">
+async function loadMovies() {
 
-      <div class="hero-content">
+  const list =
+    document.getElementById("movieList");
 
-        <div class="hero-badge">
-          ✦ PREMIUM MOVIE LIBRARY
-        </div>
+  list.innerHTML =
+    '<div class="loading">Loading your movies...</div>';
 
-        <h1>
-          Your Movies.<br>
-          <span>Your Collection.</span>
-        </h1>
+  try {
 
+    const response =
+      await fetch("/api/videos");
+
+    if (!response.ok) {
+
+      throw new Error(
+        "Server returned " +
+        response.status
+      );
+
+    }
+
+    movies = await response.json();
+
+    renderMovies(movies);
+
+  } catch (error) {
+
+    console.error(error);
+
+    list.innerHTML = `
+      <div class="empty">
+        <h3>Could not load movies</h3>
         <p>
-          Watch your personal movie collection anytime,
-          anywhere with a beautiful cinematic experience.
+          Please refresh the page and try again.
         </p>
-
       </div>
+    `;
 
-    </section>
+  }
+
+}
 
 
-    <!-- SEARCH -->
-    <section class="library-section">
+// ===============================
+// RENDER MOVIES
+// ===============================
 
-      <div class="section-heading">
+function renderMovies(list) {
 
-        <div>
-          <div class="eyebrow">YOUR COLLECTION</div>
-          <h2>My Videos</h2>
-        </div>
+  const container =
+    document.getElementById("movieList");
 
-        <div class="library-count">
-          🎞️ Private Library
-        </div>
+  if (!list.length) {
 
+    container.innerHTML = `
+      <div class="empty">
+        <h3>No movies yet</h3>
+        <p>
+          Upload your first movie above.
+        </p>
       </div>
+    `;
+
+    return;
+
+  }
+
+  container.innerHTML = "";
+
+  list.forEach(movie => {
+
+    const card =
+      document.createElement("div");
+
+    card.className = "movie";
+
+    const video =
+      document.createElement("video");
+
+    video.controls = true;
+
+    video.preload = "metadata";
+
+    video.src = movie.url;
+
+    video.setAttribute(
+      "playsinline",
+      ""
+    );
+
+    const info =
+      document.createElement("div");
+
+    info.className = "movie-info";
+
+    const title =
+      document.createElement("div");
+
+    title.className = "movie-title";
+
+    title.textContent =
+      movie.title;
+
+    const date =
+      document.createElement("div");
+
+    date.className = "movie-date";
+
+    date.textContent =
+      formatDate(movie.uploadedAt);
+
+    const deleteButton =
+      document.createElement("button");
+
+    deleteButton.className = "delete";
+
+    deleteButton.textContent =
+      "Delete Movie";
+
+    deleteButton.onclick =
+      () => deleteMovie(movie.id);
+
+    info.appendChild(title);
+
+    info.appendChild(date);
+
+    info.appendChild(deleteButton);
+
+    card.appendChild(video);
+
+    card.appendChild(info);
+
+    container.appendChild(card);
+
+  });
+
+}
 
 
-      <!-- SEARCH BOX -->
-      <div class="search-box">
+// ===============================
+// UPLOAD
+// ===============================
 
-        <span class="search-icon">🔍</span>
+function uploadMovie() {
 
-        <input
-          type="text"
-          id="searchInput"
-          placeholder="Search your movies..."
-          autocomplete="off"
-        >
+  const titleInput =
+    document.getElementById("title");
 
-      </div>
+  const fileInput =
+    document.getElementById("video");
+
+  const button =
+    document.getElementById("uploadButton");
+
+  const status =
+    document.getElementById("status");
+
+  const progress =
+    document.getElementById("progress");
+
+  const progressBar =
+    document.getElementById("progressBar");
+
+  const file =
+    fileInput.files[0];
+
+  if (!file) {
+
+    status.textContent =
+      "Please choose a video first.";
+
+    return;
+
+  }
+
+  const formData =
+    new FormData();
+
+  formData.append(
+    "video",
+    file
+  );
+
+  formData.append(
+    "title",
+    titleInput.value.trim()
+  );
+
+  const xhr =
+    new XMLHttpRequest();
+
+  xhr.open(
+    "POST",
+    "/api/upload"
+  );
+
+  button.disabled = true;
+
+  button.textContent =
+    "Uploading...";
+
+  progress.style.display =
+    "block";
+
+  progressBar.style.width =
+    "0%";
+
+  status.textContent =
+    "Uploading your movie...";
+
+  xhr.upload.onprogress =
+    function(event) {
+
+      if (event.lengthComputable) {
+
+        const percent =
+          Math.round(
+            event.loaded /
+            event.total *
+            100
+          );
+
+        progressBar.style.width =
+          percent + "%";
+
+        status.textContent =
+          "Uploading... " +
+          percent +
+          "%";
+
+      }
+
+    };
+
+  xhr.onload =
+    async function() {
+
+      button.disabled = false;
+
+      button.textContent =
+        "Upload Movie";
+
+      if (
+        xhr.status >= 200 &&
+        xhr.status < 300
+      ) {
+
+        try {
+
+          const result =
+            JSON.parse(xhr.responseText);
+
+          if (!result.ok) {
+            throw new Error(
+              result.error ||
+              "Upload failed"
+            );
+          }
+
+          status.textContent =
+            "✅ Movie uploaded successfully.";
+
+          titleInput.value = "";
+
+          fileInput.value = "";
+
+          progressBar.style.width =
+            "100%";
+
+          await loadMovies();
+
+        } catch (error) {
+
+          status.textContent =
+            "❌ " + error.message;
+
+        }
+
+      } else {
+
+        let message =
+          "Upload failed.";
+
+        try {
+
+          const result =
+            JSON.parse(
+              xhr.responseText
+            );
+
+          if (result.error) {
+            message =
+              result.error;
+          }
+
+        } catch (_) {}
+
+        status.textContent =
+          "❌ " + message;
+
+      }
+
+      setTimeout(() => {
+
+        progress.style.display =
+          "none";
+
+      }, 1500);
+
+    };
+
+  xhr.onerror =
+    function() {
+
+      button.disabled = false;
+
+      button.textContent =
+        "Upload Movie";
+
+      status.textContent =
+        "❌ Network error. Please try again.";
+
+      progress.style.display =
+        "none";
+
+    };
+
+  xhr.send(formData);
+
+}
 
 
-      <!-- UPLOAD -->
-      <section class="upload-card">
+// ===============================
+// DELETE
+// ===============================
 
-        <div class="upload-icon">
-          ⬆
-        </div>
+async function deleteMovie(id) {
 
-        <div class="upload-content">
+  const movie =
+    movies.find(
+      item => item.id === id
+    );
 
-          <h2>Add a New Movie</h2>
+  if (!movie) {
+    return;
+  }
 
-          <p>
-            Upload your video and add it to your private library.
-          </p>
+  const confirmed =
+    confirm(
+      'Delete "' +
+      movie.title +
+      '"?'
+    );
 
-          <form id="uploadForm">
+  if (!confirmed) {
+    return;
+  }
 
-            <div class="upload-fields">
+  try {
 
-              <input
-                type="text"
-                name="title"
-                placeholder="Movie title"
-                required
-              >
+    const response =
+      await fetch(
+        "/api/videos/" +
+        encodeURIComponent(id),
+        {
+          method: "DELETE"
+        }
+      );
 
-              <label class="file-input">
+    const result =
+      await response.json();
 
-                <span>📁 Choose Video</span>
+    if (!response.ok || !result.ok) {
 
-                <input
-                  type="file"
-                  name="video"
-                  accept="video/*"
-                  required
-                >
+      throw new Error(
+        result.error ||
+        "Delete failed"
+      );
 
-              </label>
+    }
 
-              <button type="submit" class="upload-btn">
-                <span>Upload Movie</span>
-                <span>→</span>
-              </button>
+    await loadMovies();
 
-            </div>
+  } catch (error) {
 
-            <div id="progress" class="progress"></div>
+    alert(
+      "Delete failed: " +
+      error.message
+    );
 
-          </form>
+  }
 
-        </div>
-
-      </section>
-
-
-      <!-- MOVIE GRID -->
-      <section class="movies-section">
-
-        <div class="movies-header">
-
-          <div>
-            <div class="eyebrow">LIBRARY</div>
-            <h2>All Movies</h2>
-          </div>
-
-        </div>
-
-        <div id="grid" class="grid">
-
-          <div class="loading-card">
-            <div class="loader"></div>
-            <p>Loading your movies...</p>
-          </div>
-
-        </div>
-
-      </section>
-
-    </section>
-
-  </main>
+}
 
 
-  <!-- VIDEO PLAYER -->
-  <div id="playerModal" class="modal hidden">
+// ===============================
+// SEARCH
+// ===============================
 
-    <div class="player-container">
+function filterMovies() {
 
-      <div class="player-header">
+  const query =
+    document
+      .getElementById("search")
+      .value
+      .toLowerCase()
+      .trim();
 
-        <div>
-          <div class="player-label">NOW PLAYING</div>
-          <h2 id="playerTitle">Movie</h2>
-        </div>
+  const filtered =
+    movies.filter(movie =>
+      movie.title
+        .toLowerCase()
+        .includes(query)
+    );
 
-        <button class="close" aria-label="Close player">
-          ✕
-        </button>
+  renderMovies(filtered);
 
-      </div>
-
-
-      <div class="video-wrapper">
-
-        <video
-          id="player"
-          controls
-          playsinline
-          preload="metadata"
-        ></video>
-
-      </div>
-
-    </div>
-
-  </div>
+}
 
 
-  <!-- FOOTER -->
-  <footer>
+// ===============================
+// DATE
+// ===============================
 
-    <div class="footer-brand">
-      🎬 My Movie Watch
-    </div>
+function formatDate(date) {
 
-    <p>
-      Private movie library • Made for personal use
-    </p>
+  if (!date) {
+    return "";
+  }
 
-  </footer>
+  try {
+
+    return new Date(date)
+      .toLocaleString();
+
+  } catch (error) {
+
+    return "";
+
+  }
+
+}
 
 
-  <script src="app.js"></script>
+// ===============================
+// START
+// ===============================
+
+loadMovies();
+
+</script>
 
 </body>
+
 </html>
