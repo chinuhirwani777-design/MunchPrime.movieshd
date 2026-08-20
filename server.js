@@ -14,12 +14,17 @@ const PASSWORD = process.env.SITE_PASSWORD || "friends123";
 // Folders
 const publicDir = __dirname;
 const videoDir = path.join(__dirname, "videos");
+const posterDir = path.join(__dirname, "posters");
 const dataDir = path.join(__dirname, "data");
 const dbFile = path.join(dataDir, "videos.json");
 
 // Folders automatically create karo
 if (!fs.existsSync(videoDir)) {
   fs.mkdirSync(videoDir, { recursive: true });
+}
+
+if (!fs.existsSync(posterDir)) {
+  fs.mkdirSync(posterDir, { recursive: true });
 }
 
 if (!fs.existsSync(dataDir)) {
@@ -29,7 +34,6 @@ if (!fs.existsSync(dataDir)) {
 if (!fs.existsSync(dbFile)) {
   fs.writeFileSync(dbFile, "[]", "utf8");
 }
-
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -109,8 +113,25 @@ const storage = multer.diskStorage({
   }
 });
 
+const mediaStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    if (file.fieldname === "poster") {
+      cb(null, posterDir);
+    } else {
+      cb(null, videoDir);
+    }
+  },
+
+  filename: (req, file, cb) => {
+    const original = file.originalname || "file";
+    const safeName = original.replace(/[^a-zA-Z0-9.-]/g, "");
+
+    cb(null, Date.now() + "-" + safeName);
+  }
+});
+
 const upload = multer({
-  storage: storage,
+  storage: mediaStorage,
 
   limits: {
     fileSize: 8 * 1024 * 1024 * 1024
@@ -132,15 +153,21 @@ app.get("/api/videos", auth, (req, res) => {
 });
 
 // =========================
-// UPLOAD VIDEO
+// UPLOAD VIDEO + POSTER
 // =========================
 app.post(
   "/api/upload",
   auth,
-  upload.single("video"),
+  upload.fields([
+    { name: "video", maxCount: 1 },
+    { name: "poster", maxCount: 1 }
+  ]),
   (req, res) => {
 
-    if (!req.file) {
+    const videoFile = req.files?.video?.[0];
+    const posterFile = req.files?.poster?.[0];
+
+    if (!videoFile) {
       return res.status(400).json({
         error: "No video selected"
       });
@@ -150,10 +177,11 @@ app.post(
 
     const video = {
       id: Date.now().toString(),
-      title: req.body.title || req.file.originalname,
-      filename: req.file.filename,
-      originalName: req.file.originalname,
-      size: req.file.size,
+      title: req.body.title || videoFile.originalname,
+      filename: videoFile.filename,
+      originalName: videoFile.originalname,
+      size: videoFile.size,
+      poster: posterFile ? "/posters/" + posterFile.filename : null,
       uploadedAt: new Date().toISOString()
     };
 
@@ -162,7 +190,7 @@ app.post(
 
     res.json({
       ok: true,
-      message: "Video uploaded successfully",
+      message: "Video and poster uploaded successfully",
       video: {
         ...video,
         url: "/api/stream/" + video.id
