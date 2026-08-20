@@ -72,32 +72,7 @@ function writeDB(data) {
    FILE UPLOAD
 ========================= */
 
-  fileFilter: (req, file, cb) => {
-
-    const allowed = [
-      ".mp4",
-      ".webm",
-      ".mkv",
-      ".mov",
-      ".avi",
-      ".m4v"
-    ];
-
-    const ext =
-      path.extname(file.originalname).toLowerCase();
-
-    if (!allowed.includes(ext)) {
-      return cb(
-        new Error(
-          "Only MP4, WebM, MKV, MOV, AVI and M4V videos are allowed."
-        )
-      );
-    }
-
-    cb(null, true);
-  }
-
-
+  
 
 /* =========================
    HOME PAGE
