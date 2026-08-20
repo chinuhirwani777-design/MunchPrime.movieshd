@@ -7,71 +7,145 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-const ROOT = __dirname;
-const VIDEO_DIR = path.join(ROOT, "videos");
-const DATA_DIR = path.join(ROOT, "data");
+// =====================================
+// DIRECTORIES
+// =====================================
+
+const ROOT_DIR = __dirname;
+
+const VIDEO_DIR = path.join(ROOT_DIR, "videos");
+const POSTER_DIR = path.join(ROOT_DIR, "posters");
+const DATA_DIR = path.join(ROOT_DIR, "data");
+
 const DB_FILE = path.join(DATA_DIR, "videos.json");
 
-// ===============================
-// CREATE FOLDERS
-// ===============================
+// =====================================
+// CREATE DIRECTORIES
+// =====================================
 
-for (const dir of [VIDEO_DIR, DATA_DIR]) {
+for (const dir of [
+  VIDEO_DIR,
+  POSTER_DIR,
+  DATA_DIR
+]) {
   if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
+    fs.mkdirSync(dir, {
+      recursive: true
+    });
   }
 }
+
+// =====================================
+// CREATE DATABASE
+// =====================================
 
 if (!fs.existsSync(DB_FILE)) {
-  fs.writeFileSync(DB_FILE, "[]", "utf8");
-}
-
-// ===============================
-// MIDDLEWARE
-// ===============================
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.use(express.static(ROOT));
-
-// ===============================
-// DATABASE
-// ===============================
-
-function readDB() {
-  try {
-    const data = fs.readFileSync(DB_FILE, "utf8");
-    const videos = JSON.parse(data);
-
-    return Array.isArray(videos) ? videos : [];
-  } catch (error) {
-    console.error("Database read error:", error);
-    return [];
-  }
-}
-
-function writeDB(videos) {
   fs.writeFileSync(
     DB_FILE,
-    JSON.stringify(videos, null, 2),
+    "[]",
     "utf8"
   );
 }
 
-// ===============================
-// HOME
-// ===============================
+// =====================================
+// MIDDLEWARE
+// =====================================
+
+app.use(express.json());
+
+app.use(
+  express.urlencoded({
+    extended: true
+  })
+);
+
+// Website files
+app.use(
+  express.static(ROOT_DIR)
+);
+
+// Video files
+app.use(
+  "/videos",
+  express.static(VIDEO_DIR)
+);
+
+// Poster files
+app.use(
+  "/posters",
+  express.static(POSTER_DIR)
+);
+
+// =====================================
+// DATABASE
+// =====================================
+
+function readDB() {
+
+  try {
+
+    const data =
+      fs.readFileSync(
+        DB_FILE,
+        "utf8"
+      );
+
+    const json =
+      JSON.parse(data);
+
+    if (!Array.isArray(json)) {
+      return [];
+    }
+
+    return json;
+
+  } catch (error) {
+
+    console.error(
+      "Database read error:",
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
+function writeDB(data) {
+
+  fs.writeFileSync(
+    DB_FILE,
+    JSON.stringify(
+      data,
+      null,
+      2
+    ),
+    "utf8"
+  );
+
+}
+
+// =====================================
+// HOME PAGE
+// =====================================
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(ROOT, "index.html"));
+
+  res.sendFile(
+    path.join(
+      ROOT_DIR,
+      "index.html"
+    )
+  );
+
 });
 
-// ===============================
-// MULTER
-// ===============================
+// =====================================
+// FILE TYPES
+// =====================================
 
-const allowedExtensions = [
+const videoExtensions = [
   ".mp4",
   ".webm",
   ".mkv",
@@ -80,184 +154,238 @@ const allowedExtensions = [
   ".m4v"
 ];
 
+const posterExtensions = [
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".webp"
+];
+
+// =====================================
+// MULTER STORAGE
+// =====================================
+
 const storage = multer.diskStorage({
 
   destination: (req, file, cb) => {
-    cb(null, VIDEO_DIR);
+
+    if (file.fieldname === "poster") {
+
+      cb(
+        null,
+        POSTER_DIR
+      );
+
+    } else {
+
+      cb(
+        null,
+        VIDEO_DIR
+      );
+
+    }
+
   },
 
   filename: (req, file, cb) => {
 
-    const ext = path.extname(file.originalname).toLowerCase();
+    const ext =
+      path
+        .extname(
+          file.originalname
+        )
+        .toLowerCase();
 
-    const baseName = path
-      .basename(file.originalname, ext)
-      .replace(/[^a-zA-Z0-9_-]/g, "_")
-      .slice(0, 80);
+    const base =
+      path
+        .basename(
+          file.originalname,
+          ext
+        )
+        .replace(
+          /[^a-zA-Z0-9_-]/g,
+          "_"
+        )
+        .slice(
+          0,
+          70
+        );
 
     const filename =
       Date.now() +
       "_" +
-      Math.random().toString(36).slice(2, 8) +
+      Math.random()
+        .toString(36)
+        .slice(2, 8) +
       "_" +
-      baseName +
+      base +
       ext;
 
-    cb(null, filename);
+    cb(
+      null,
+      filename
+    );
+
   }
 
 });
+
+// =====================================
+// MULTER
+// =====================================
 
 const upload = multer({
 
   storage,
 
   limits: {
-    fileSize: 8 * 1024 * 1024 * 1024
+
+    // 8 GB maximum video
+    fileSize:
+      8 *
+      1024 *
+      1024 *
+      1024
+
   },
 
-  fileFilter: (req, file, cb) => {
+  fileFilter: (
+    req,
+    file,
+    cb
+  ) => {
 
-    const ext = path
-      .extname(file.originalname)
-      .toLowerCase();
+    const ext =
+      path
+        .extname(
+          file.originalname
+        )
+        .toLowerCase();
 
-    if (!allowedExtensions.includes(ext)) {
+    // VIDEO
+    if (
+      file.fieldname === "video"
+    ) {
+
+      if (
+        !videoExtensions.includes(
+          ext
+        )
+      ) {
+
+        return cb(
+          new Error(
+            "Invalid video format."
+          )
+        );
+
+      }
 
       return cb(
-        new Error(
-          "Only MP4, WebM, MKV, MOV, AVI and M4V videos are allowed."
-        )
+        null,
+        true
       );
 
     }
 
-    cb(null, true);
+    // POSTER
+    if (
+      file.fieldname === "poster"
+    ) {
+
+      if (
+        !posterExtensions.includes(
+          ext
+        )
+      ) {
+
+        return cb(
+          new Error(
+            "Thumbnail must be JPG, JPEG, PNG or WEBP."
+          )
+        );
+
+      }
+
+      return cb(
+        null,
+        true
+      );
+
+    }
+
+    cb(
+      new Error(
+        "Invalid upload field."
+      )
+    );
+
   }
 
 });
 
-// ===============================
+// =====================================
 // GET MOVIES
-// ===============================
+// =====================================
 
-app.get("/api/videos", (req, res) => {
-
-  try {
-
-    const videos = readDB();
-
-    const result = videos.map(video => ({
-      id: video.id,
-      title: video.title,
-      originalName: video.originalName,
-      size: video.size,
-      uploadedAt: video.uploadedAt,
-      url: "/api/stream/" + encodeURIComponent(video.id)
-    }));
-
-    res.json(result);
-
-  } catch (error) {
-
-    console.error("GET VIDEOS ERROR:", error);
-
-    res.status(500).json({
-      ok: false,
-      error: "Could not load movies"
-    });
-
-  }
-
-});
-
-// ===============================
-// UPLOAD MOVIE
-// ===============================
-
-app.post(
-  "/api/upload",
-  upload.single("video"),
+app.get(
+  "/api/videos",
   (req, res) => {
 
     try {
 
-      if (!req.file) {
+      const videos =
+        readDB();
 
-        return res.status(400).json({
-          ok: false,
-          error: "Please select a video."
-        });
+      const result =
+        videos.map(
+          video => ({
 
-      }
+            id:
+              video.id,
 
-      const title =
-        (req.body.title || req.file.originalname)
-          .trim()
-          .slice(0, 150);
+            title:
+              video.title,
 
-      const videos = readDB();
+            filename:
+              video.filename,
 
-      const movie = {
+            originalName:
+              video.originalName,
 
-        id:
-          Date.now().toString() +
-          "_" +
-          Math.random().toString(36).slice(2, 8),
+            size:
+              video.size,
 
-        title: title,
+            poster:
+              video.poster || null,
 
-        filename: req.file.filename,
+            uploadedAt:
+              video.uploadedAt,
 
-        originalName: req.file.originalname,
+            url:
+              "/api/stream/" +
+              encodeURIComponent(
+                video.id
+              )
 
-        size: req.file.size,
+          })
+        );
 
-        uploadedAt: new Date().toISOString()
-
-      };
-
-      videos.unshift(movie);
-
-      writeDB(videos);
-
-      console.log("Movie uploaded:", movie.title);
-
-      res.json({
-
-        ok: true,
-
-        message: "Movie uploaded successfully.",
-
-        movie: {
-
-          id: movie.id,
-
-          title: movie.title,
-
-          originalName: movie.originalName,
-
-          size: movie.size,
-
-          uploadedAt: movie.uploadedAt,
-
-          url:
-            "/api/stream/" +
-            encodeURIComponent(movie.id)
-
-        }
-
-      });
+      res.json(result);
 
     } catch (error) {
 
-      console.error("UPLOAD ERROR:", error);
+      console.error(
+        "GET MOVIES ERROR:",
+        error
+      );
 
       res.status(500).json({
 
         ok: false,
 
-        error: "Upload failed."
+        error:
+          "Could not load movies."
 
       });
 
@@ -266,348 +394,714 @@ app.post(
   }
 );
 
-// ===============================
-// STREAM VIDEO
-// ===============================
+// =====================================
+// UPLOAD VIDEO + THUMBNAIL
+// =====================================
 
-app.get("/api/stream/:id", (req, res) => {
+app.post(
+  "/api/upload",
 
-  try {
+  upload.fields([
 
-    const id = req.params.id;
+    {
+      name: "video",
+      maxCount: 1
+    },
 
-    const videos = readDB();
-
-    const movie = videos.find(
-      video => video.id === id
-    );
-
-    if (!movie) {
-
-      return res
-        .status(404)
-        .send("Movie not found.");
-
+    {
+      name: "poster",
+      maxCount: 1
     }
 
-    const videoPath =
-      path.join(VIDEO_DIR, movie.filename);
+  ]),
 
-    if (!fs.existsSync(videoPath)) {
+  (req, res) => {
 
-      return res
-        .status(404)
-        .send("Video file not found.");
+    try {
 
-    }
+      const videoFile =
+        req.files &&
+        req.files.video &&
+        req.files.video[0];
 
-    const stat = fs.statSync(videoPath);
+      const posterFile =
+        req.files &&
+        req.files.poster &&
+        req.files.poster[0];
 
-    const fileSize = stat.size;
+      // VIDEO REQUIRED
+      if (!videoFile) {
 
-    const ext =
-      path.extname(movie.filename)
-        .toLowerCase();
+        return res.status(400).json({
 
-    const mimeTypes = {
+          ok: false,
 
-      ".mp4": "video/mp4",
+          error:
+            "Please select a video."
 
-      ".webm": "video/webm",
+        });
 
-      ".mkv": "video/x-matroska",
+      }
 
-      ".mov": "video/quicktime",
+      const title =
+        (
+          req.body.title ||
+          videoFile.originalname
+        )
+          .trim()
+          .slice(
+            0,
+            150
+          );
 
-      ".avi": "video/x-msvideo",
+      const videos =
+        readDB();
 
-      ".m4v": "video/mp4"
+      const id =
+        Date.now().toString() +
+        "_" +
+        Math.random()
+          .toString(36)
+          .slice(2, 8);
 
-    };
+      const movie = {
 
-    const contentType =
-      mimeTypes[ext] || "application/octet-stream";
+        id,
 
-    const range = req.headers.range;
+        title,
 
-    // =========================
-    // NORMAL REQUEST
-    // =========================
+        filename:
+          videoFile.filename,
 
-    if (!range) {
+        originalName:
+          videoFile.originalname,
 
-      res.writeHead(200, {
+        size:
+          videoFile.size,
 
-        "Content-Length": fileSize,
+        poster:
+          posterFile
+            ? "/posters/" +
+              posterFile.filename
+            : null,
 
-        "Content-Type": contentType,
+        posterFilename:
+          posterFile
+            ? posterFile.filename
+            : null,
 
-        "Accept-Ranges": "bytes",
+        uploadedAt:
+          new Date()
+            .toISOString()
 
-        "Cache-Control": "no-cache"
+      };
+
+      videos.unshift(movie);
+
+      writeDB(videos);
+
+      console.log(
+        "Movie uploaded:",
+        movie.title
+      );
+
+      res.json({
+
+        ok: true,
+
+        message:
+          "Movie uploaded successfully.",
+
+        movie: {
+
+          id:
+            movie.id,
+
+          title:
+            movie.title,
+
+          originalName:
+            movie.originalName,
+
+          size:
+            movie.size,
+
+          poster:
+            movie.poster,
+
+          uploadedAt:
+            movie.uploadedAt,
+
+          url:
+            "/api/stream/" +
+            encodeURIComponent(
+              movie.id
+            )
+
+        }
 
       });
 
-      return fs
-        .createReadStream(videoPath)
-        .pipe(res);
+    } catch (error) {
 
-    }
+      console.error(
+        "UPLOAD ERROR:",
+        error
+      );
 
-    // =========================
-    // RANGE REQUEST
-    // =========================
-
-    const match =
-      range.match(/bytes=(\d*)-(\d*)/);
-
-    if (!match) {
-
-      return res
-        .status(416)
-        .set({
-          "Content-Range":
-            `bytes */${fileSize}`
-        })
-        .end();
-
-    }
-
-    let start =
-      match[1]
-        ? parseInt(match[1], 10)
-        : 0;
-
-    let end =
-      match[2]
-        ? parseInt(match[2], 10)
-        : fileSize - 1;
-
-    if (
-      Number.isNaN(start) ||
-      Number.isNaN(end) ||
-      start < 0 ||
-      start >= fileSize
-    ) {
-
-      return res
-        .status(416)
-        .set({
-          "Content-Range":
-            `bytes */${fileSize}`
-        })
-        .end();
-
-    }
-
-    if (end >= fileSize) {
-      end = fileSize - 1;
-    }
-
-    if (end < start) {
-
-      return res
-        .status(416)
-        .set({
-          "Content-Range":
-            `bytes */${fileSize}`
-        })
-        .end();
-
-    }
-
-    const chunkSize =
-      end - start + 1;
-
-    res.writeHead(206, {
-
-      "Content-Range":
-        `bytes ${start}-${end}/${fileSize}`,
-
-      "Accept-Ranges": "bytes",
-
-      "Content-Length": chunkSize,
-
-      "Content-Type": contentType,
-
-      "Cache-Control": "no-cache"
-
-    });
-
-    fs
-      .createReadStream(videoPath, {
-        start,
-        end
-      })
-      .pipe(res);
-
-  } catch (error) {
-
-    console.error("STREAM ERROR:", error);
-
-    if (!res.headersSent) {
-      res
-        .status(500)
-        .send("Streaming error.");
-    }
-
-  }
-
-});
-
-// ===============================
-// DELETE MOVIE
-// ===============================
-
-app.delete("/api/videos/:id", (req, res) => {
-
-  try {
-
-    const id = req.params.id;
-
-    const videos = readDB();
-
-    const index = videos.findIndex(
-      video => video.id === id
-    );
-
-    if (index === -1) {
-
-      return res.status(404).json({
+      res.status(500).json({
 
         ok: false,
 
-        error: "Movie not found."
+        error:
+          error.message ||
+          "Upload failed."
 
       });
 
     }
 
-    const movie = videos[index];
+  }
+);
 
-    const videoPath =
-      path.join(VIDEO_DIR, movie.filename);
+// =====================================
+// STREAM VIDEO
+// =====================================
 
-    if (fs.existsSync(videoPath)) {
+app.get(
+  "/api/stream/:id",
+  (req, res) => {
 
-      fs.unlinkSync(videoPath);
+    try {
+
+      const id =
+        req.params.id;
+
+      const videos =
+        readDB();
+
+      const movie =
+        videos.find(
+          item =>
+            item.id === id
+        );
+
+      if (!movie) {
+
+        return res
+          .status(404)
+          .send(
+            "Movie not found."
+          );
+
+      }
+
+      const videoPath =
+        path.join(
+          VIDEO_DIR,
+          movie.filename
+        );
+
+      if (
+        !fs.existsSync(
+          videoPath
+        )
+      ) {
+
+        return res
+          .status(404)
+          .send(
+            "Video file not found."
+          );
+
+      }
+
+      const stat =
+        fs.statSync(
+          videoPath
+        );
+
+      const fileSize =
+        stat.size;
+
+      const ext =
+        path
+          .extname(
+            movie.filename
+          )
+          .toLowerCase();
+
+      const mimeTypes = {
+
+        ".mp4":
+          "video/mp4",
+
+        ".webm":
+          "video/webm",
+
+        ".mkv":
+          "video/x-matroska",
+
+        ".mov":
+          "video/quicktime",
+
+        ".avi":
+          "video/x-msvideo",
+
+        ".m4v":
+          "video/mp4"
+
+      };
+
+      const contentType =
+        mimeTypes[ext] ||
+        "application/octet-stream";
+
+      const range =
+        req.headers.range;
+
+      // =================================
+      // NORMAL VIDEO REQUEST
+      // =================================
+
+      if (!range) {
+
+        res.writeHead(
+          200,
+          {
+
+            "Content-Length":
+              fileSize,
+
+            "Content-Type":
+              contentType,
+
+            "Accept-Ranges":
+              "bytes",
+
+            "Cache-Control":
+              "no-cache"
+
+          }
+        );
+
+        return fs
+          .createReadStream(
+            videoPath
+          )
+          .pipe(res);
+
+      }
+
+      // =================================
+      // RANGE REQUEST
+      // =================================
+
+      const match =
+        range.match(
+          /bytes=(\d*)-(\d*)/
+        );
+
+      if (!match) {
+
+        return res
+          .status(416)
+          .set({
+
+            "Content-Range":
+              `bytes */${fileSize}`
+
+          })
+          .end();
+
+      }
+
+      let start =
+        match[1]
+          ? parseInt(
+              match[1],
+              10
+            )
+          : 0;
+
+      let end =
+        match[2]
+          ? parseInt(
+              match[2],
+              10
+            )
+          : fileSize - 1;
+
+      if (
+        Number.isNaN(start) ||
+        Number.isNaN(end) ||
+        start < 0 ||
+        start >= fileSize
+      ) {
+
+        return res
+          .status(416)
+          .set({
+
+            "Content-Range":
+              `bytes */${fileSize}`
+
+          })
+          .end();
+
+      }
+
+      if (
+        end >= fileSize
+      ) {
+
+        end =
+          fileSize - 1;
+
+      }
+
+      if (
+        end < start
+      ) {
+
+        return res
+          .status(416)
+          .set({
+
+            "Content-Range":
+              `bytes */${fileSize}`
+
+          })
+          .end();
+
+      }
+
+      const chunkSize =
+        end -
+        start +
+        1;
+
+      res.writeHead(
+        206,
+        {
+
+          "Content-Range":
+            `bytes ${start}-${end}/${fileSize}`,
+
+          "Accept-Ranges":
+            "bytes",
+
+          "Content-Length":
+            chunkSize,
+
+          "Content-Type":
+            contentType,
+
+          "Cache-Control":
+            "no-cache"
+
+        }
+      );
+
+      fs
+        .createReadStream(
+          videoPath,
+          {
+            start,
+            end
+          }
+        )
+        .pipe(res);
+
+    } catch (error) {
+
+      console.error(
+        "STREAM ERROR:",
+        error
+      );
+
+      if (
+        !res.headersSent
+      ) {
+
+        res
+          .status(500)
+          .send(
+            "Streaming error."
+          );
+
+      }
 
     }
 
-    videos.splice(index, 1);
+  }
+);
 
-    writeDB(videos);
+// =====================================
+// DELETE MOVIE
+// =====================================
 
-    console.log("Movie deleted:", movie.title);
+app.delete(
+  "/api/videos/:id",
+  (req, res) => {
+
+    try {
+
+      const id =
+        req.params.id;
+
+      const videos =
+        readDB();
+
+      const index =
+        videos.findIndex(
+          video =>
+            video.id === id
+        );
+
+      if (
+        index === -1
+      ) {
+
+        return res
+          .status(404)
+          .json({
+
+            ok: false,
+
+            error:
+              "Movie not found."
+
+          });
+
+      }
+
+      const movie =
+        videos[index];
+
+      // DELETE VIDEO
+      if (
+        movie.filename
+      ) {
+
+        const videoPath =
+          path.join(
+            VIDEO_DIR,
+            movie.filename
+          );
+
+        if (
+          fs.existsSync(
+            videoPath
+          )
+        ) {
+
+          fs.unlinkSync(
+            videoPath
+          );
+
+        }
+
+      }
+
+      // DELETE POSTER
+      if (
+        movie.posterFilename
+      ) {
+
+        const posterPath =
+          path.join(
+            POSTER_DIR,
+            movie.posterFilename
+          );
+
+        if (
+          fs.existsSync(
+            posterPath
+          )
+        ) {
+
+          fs.unlinkSync(
+            posterPath
+          );
+
+        }
+
+      }
+
+      videos.splice(
+        index,
+        1
+      );
+
+      writeDB(
+        videos
+      );
+
+      console.log(
+        "Movie deleted:",
+        movie.title
+      );
+
+      res.json({
+
+        ok: true,
+
+        message:
+          "Movie and thumbnail deleted."
+
+      });
+
+    } catch (error) {
+
+      console.error(
+        "DELETE ERROR:",
+        error
+      );
+
+      res.status(500).json({
+
+        ok: false,
+
+        error:
+          "Delete failed."
+
+      });
+
+    }
+
+  }
+);
+
+// =====================================
+// HEALTH CHECK
+// =====================================
+
+app.get(
+  "/api/health",
+  (req, res) => {
 
     res.json({
 
       ok: true,
 
-      message: "Movie deleted successfully."
+      status:
+        "online",
+
+      website:
+        "My Movie Watch"
 
     });
 
-  } catch (error) {
+  }
+);
 
-    console.error("DELETE ERROR:", error);
+// =====================================
+// API 404
+// =====================================
+
+app.use(
+  "/api",
+  (req, res) => {
+
+    res.status(404).json({
+
+      ok: false,
+
+      error:
+        "API route not found."
+
+    });
+
+  }
+);
+
+// =====================================
+// ERROR HANDLER
+// =====================================
+
+app.use(
+  (error, req, res, next) => {
+
+    console.error(
+      "SERVER ERROR:",
+      error
+    );
+
+    if (
+      error instanceof
+      multer.MulterError
+    ) {
+
+      return res
+        .status(400)
+        .json({
+
+          ok: false,
+
+          error:
+            "Upload error: " +
+            error.message
+
+        });
+
+    }
 
     res.status(500).json({
 
       ok: false,
 
-      error: "Delete failed."
-
-    });
-
-  }
-
-});
-
-// ===============================
-// HEALTH CHECK
-// ===============================
-
-app.get("/api/health", (req, res) => {
-
-  res.json({
-
-    ok: true,
-
-    status: "online",
-
-    website: "My Movie Watch"
-
-  });
-
-});
-
-// ===============================
-// 404 API
-// ===============================
-
-app.use("/api", (req, res) => {
-
-  res.status(404).json({
-
-    ok: false,
-
-    error: "API route not found."
-
-  });
-
-});
-
-// ===============================
-// ERROR HANDLER
-// ===============================
-
-app.use((error, req, res, next) => {
-
-  console.error("SERVER ERROR:", error);
-
-  if (error instanceof multer.MulterError) {
-
-    return res.status(400).json({
-
-      ok: false,
-
       error:
-        "Upload error: " +
-        error.message
+        error.message ||
+        "Server error."
 
     });
 
   }
+);
 
-  res.status(500).json({
+// =====================================
+// START SERVER
+// =====================================
 
-    ok: false,
+app.listen(
+  PORT,
+  "0.0.0.0",
+  () => {
 
-    error:
-      error.message ||
-      "Server error."
+    console.log("");
+    console.log(
+      "===================================="
+    );
+    console.log(
+      "          MY MOVIE WATCH"
+    );
+    console.log(
+      "===================================="
+    );
+    console.log(
+      "Server running on port:",
+      PORT
+    );
+    console.log(
+      "Password: DISABLED"
+    );
+    console.log(
+      "Video upload: ENABLED"
+    );
+    console.log(
+      "Thumbnail upload: ENABLED"
+    );
+    console.log(
+      "Video streaming: ENABLED"
+    );
+    console.log(
+      "Delete: ENABLED"
+    );
+    console.log(
+      "===================================="
+    );
+    console.log("");
 
-  });
-
-});
-
-// ===============================
-// START
-// ===============================
-
-app.listen(PORT, "0.0.0.0", () => {
-
-  console.log("");
-  console.log("=================================");
-  console.log("       MY MOVIE WATCH");
-  console.log("=================================");
-  console.log("Server running on port:", PORT);
-  console.log("No password authentication");
-  console.log("Movie upload: ENABLED");
-  console.log("Movie streaming: ENABLED");
-  console.log("Movie delete: ENABLED");
-  console.log("=================================");
-  console.log("");
-
-});
+  }
+);
