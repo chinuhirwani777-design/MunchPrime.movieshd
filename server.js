@@ -520,24 +520,6 @@ function writeDB(data) {
   fs.writeFileSync(dbFile, JSON.stringify(data, null, 2), "utf8");
 }
 
-// =========================
-// LOGIN
-// =========================
-app.post("/api/login", (req, res) => {
-  const PASSWORD = process.env.SITE_PASSWORD || "friends123";
-
-  if (password === PASSWORD) {
-    return res.json({
-      ok: true,
-      message: "Login successful"
-    });
-  }
-
-  res.status(401).json({
-    ok: false,
-    error: "Wrong password"
-  });
-});
 
 // =========================
 // AUTH CHECK
