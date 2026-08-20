@@ -174,7 +174,7 @@ app.post(
 // =========================
 // STREAM VIDEO
 // =========================
-app.get("/api/stream/:id", auth, (req, res) => {
+app.get('/api/stream/:id', (req, res) => {
 
   const videos = readDB();
 
