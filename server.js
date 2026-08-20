@@ -223,7 +223,7 @@ app.get("/api/stream/:id", auth, (req, res) => {
   });
 
   res.writeHead(206, {
-    "Content-Range": bytes ${start}-${end}/${fileSize},
+   "Content-Range": `bytes ${start}-${end}/${fileSize}`,
     "Accept-Ranges": "bytes",
     "Content-Length": chunkSize,
     "Content-Type": "video/mp4"
