@@ -67,7 +67,7 @@ function writeDB(data) {
 // LOGIN
 // =========================
 app.post("/api/login", (req, res) => {
-  const password = req.body.password || "";
+  const PASSWORD = process.env.SITE_PASSWORD || "friends123";
 
   if (password === PASSWORD) {
     return res.json({
