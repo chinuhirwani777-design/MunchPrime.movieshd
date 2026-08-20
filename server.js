@@ -10,7 +10,7 @@ const app = express();
 ========================= */
 
 const PORT = process.env.PORT || 3000;
-const PASSWORD = process.env.SITE_PASSWORD || "friends123";
+
 
 const publicDir = __dirname;
 const videoDir = path.join(__dirname, "videos");
@@ -69,18 +69,6 @@ function writeDB(data) {
    AUTHENTICATION
 ========================= */
 
-function auth(req, res, next) {
-  const password = req.headers["x-site-password"];
-
-  if (!password || password !== PASSWORD) {
-    return res.status(401).json({
-      ok: false,
-      error: "Unauthorized"
-    });
-  }
-
-  next();
-}
 
 /* =========================
    FILE UPLOAD
