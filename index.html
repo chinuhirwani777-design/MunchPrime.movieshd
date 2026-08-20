@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Movie Watch</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><div class="brand">🎬 My Movie Watch</div><button id="logout" class="ghost hidden">Logout</button></header>
+
+<main>
+<section id="login" class="card">
+  <h1>Private Movie Library</h1>
+  <p>Friends-only access</p>
+  <input id="password" type="password" placeholder="Enter password">
+  <button id="loginBtn">Enter</button>
+  <p id="loginMsg" class="msg"></p>
+</section>
+
+<section id="app" class="hidden">
+  <div class="hero">
+    <div><h1>My Videos</h1><p>Upload and watch videos you own or are authorized to share.</p></div>
+  </div>
+  <section class="upload card">
+    <h2>Upload Video</h2>
+    <form id="uploadForm">
+      <input name="title" placeholder="Video title" required>
+      <input name="video" type="file" accept="video/*" required>
+      <button>Upload</button>
+    </form>
+    <div id="progress"></div>
+  </section>
+  <div id="grid" class="grid"></div>
+</section>
+</main>
+
+<div id="playerModal" class="modal hidden">
+  <div class="playerBox">
+    <button id="close" class="close">✕</button>
+    <h2 id="playerTitle"></h2>
+    <video id="player" controls playsinline></video>
+  </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
